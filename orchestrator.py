@@ -66,6 +66,7 @@ def Agent():
     # 2) Get user inputs
     dataset_path = input("Give Path to your dataset: ").strip()
     user_query = input("Please Provide Your Query: ").strip()
+    DATASET_PATH = dataset_path
 
     # 3) Call the reception tool
     ack = receive_data_and_query.run({"path": dataset_path, "query": user_query})

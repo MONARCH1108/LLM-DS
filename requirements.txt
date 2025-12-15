@@ -1,6 +1,0 @@
-groq
-dotenv 
-langchain
-langgraph
-pandas
-numpy
