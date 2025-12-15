@@ -1,0 +1,31 @@
+Step 1: Handle Missing Values
+Affected columns: `track_name`, `album_name`
+Skip if: No missing values are present in these columns.
+Action: Impute missing values in `track_name` and `album_name` with a designated 'Unknown' string.
+Severity: Medium
+
+Step 2: Address Numerical Outliers
+Affected columns: `popularity`, `stream_count`
+Skip if: No significant outliers are detected in these columns or if raw distribution is preferred for downstream analysis.
+Action: Apply a robust method such as winsorization or capping to mitigate extreme values in `popularity` and `stream_count`.
+Severity: High (for `stream_count`), Medium (for `popularity`)
+
+Step 3: Standardize 'explicit' Feature Values
+Affected columns: `explicit`
+Skip if: All values in `explicit` are consistent and conform to a defined binary or categorical scheme without anomalies.
+Action: Investigate the detected outliers in `explicit`. If intended as binary, convert all non-standard values to a consistent binary representation (e.g., 0 or 1). If it represents multiple categories, ensure all values are valid categories.
+Severity: High
+
+Step 4: Reduce Skewness in Numerical Features
+Affected columns: `stream_count`
+Skip if: The column's distribution is sufficiently symmetrical or if transformations are not suitable for downstream tasks.
+Action: Apply a suitable non-linear transformation (e.g., logarithmic, square root, or power transform) to `stream_count` to reduce its skewness.
+Severity: Medium
+
+Step 5: Prepare High Cardinality Categorical and Temporal Features
+Affected columns: `track_name`, `artist_name`, `album_name`, `release_date`
+Skip if: Downstream tasks can directly handle high cardinality or if these features are not utilized for modeling.
+Action: For `track_name`, `artist_name`, `album_name`, prepare for encoding by considering methods like grouping rare categories, frequency encoding, or target encoding. For `release_date`, extract relevant temporal features such as year, month, or day.
+Severity: Medium
+
+Overall cleaning complexity: High

@@ -89,6 +89,9 @@ DO NOT include anything else.
 
     # ---------- Persist Plan as TEXT ----------
     output_path = "cleaning_plan.txt"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    output_path = os.path.join(current_dir, "cleaning_plan.txt")
+
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(plan_text)
 
