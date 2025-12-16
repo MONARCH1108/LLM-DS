@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from state import ExecutionState
 from executor_tool import execute_cleaning_code
@@ -7,7 +8,7 @@ from code_writer import generate_code_for_step
 # =====================
 # DEBUG CONFIG
 # =====================
-DEBUG_LLM_CODE = True   # ⬅️ turn OFF later
+DEBUG_LLM_CODE = True   
 MAX_RETRIES = 3
 
 
@@ -148,6 +149,10 @@ def run_execution_agent(dataset_path: str, plan_path: str) -> pd.DataFrame:
         state.advance_step()
 
     print("\n🎉 CLEANING COMPLETE")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    cleaned_path = os.path.join(current_dir, "cleaned_dataset.csv")
+    state.df.to_csv(cleaned_path, index=False)
+    print(f"💾 Cleaned dataset saved to: {cleaned_path}")
     return state.df
 
 
