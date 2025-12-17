@@ -1,15 +1,23 @@
 import os
 import pandas as pd
+
 from state import ExecutionState
 from executor_tool import execute_cleaning_code
 from metrics import evaluate_step
 from code_writer import generate_code_for_step
 
+"""
+from data_cleaning.execution_agent.state import ExecutionState
+from data_cleaning.execution_agent.executor_tool import execute_cleaning_code
+from data_cleaning.execution_agent.metrics import evaluate_step
+from data_cleaning.execution_agent.code_writer import generate_code_for_step
+"""
+
 # =====================
 # DEBUG CONFIG
 # =====================
 DEBUG_LLM_CODE = True   
-MAX_RETRIES = 3
+MAX_RETRIES = 5
 
 
 def load_plan_text(plan_path: str) -> list[str]:
