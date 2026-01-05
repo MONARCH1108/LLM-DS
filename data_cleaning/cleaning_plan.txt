@@ -1,31 +1,25 @@
 Step 1: Handle missing values
-Affected columns: track_name, album_name
-Condition: Skip if no missing values are found in these columns.
-Action: Impute with a suitable placeholder like 'Unknown' or the mode, or remove rows if the proportion is negligible and permitted.
+Affected columns: `track_name`, `album_name`
+Condition: Skip if these columns are not critical for analysis or modeling, allowing downstream steps to handle nulls.
+Action: Impute missing values (e.g., with a placeholder like 'Unknown', mode, or through advanced imputation techniques) or strategically drop rows if the number of missing values is very low and impact on dataset integrity is minimal.
 Severity: Medium
 
-Step 2: Address severe outliers
-Affected columns: stream_count, explicit
-Condition: Skip if no severe outliers are detected in these columns.
-Action: Investigate the nature of severe outliers and apply robust treatment methods such as capping/flooring or data correction.
+Step 2: Detect and treat outliers
+Affected columns: `popularity`, `stream_count`, `explicit`
+Condition: Skip if outliers represent valid, extreme data points critical for the domain, or if treatment negatively impacts specific downstream model performance or business logic.
+Action: For `stream_count` and `popularity`, analyze outlier nature and apply appropriate techniques such as capping, transformation, or removal of extreme values. For `explicit`, re-evaluate its data type and values; if it's expected to be binary, outliers might indicate data errors needing correction (e.g., mapping non-binary values to 0 or 1).
 Severity: High
 
-Step 3: Address non-severe outliers
-Affected columns: popularity
-Condition: Skip if no outliers are detected in this column.
-Action: Investigate the distribution and apply appropriate outlier treatment, such as Winsorization or transformation.
+Step 3: Correct data skewness
+Affected columns: `stream_count`
+Condition: Skip if skewness does not impede the performance of target models or if transformations significantly reduce interpretability for the intended use case.
+Action: Apply appropriate mathematical transformations (e.g., log, square root, Box-Cox) to reduce the skewness in the distribution of `stream_count`.
 Severity: Medium
 
-Step 4: Correct data skewness
-Affected columns: stream_count
-Condition: Skip if the column's distribution is no longer highly skewed.
-Action: Apply a suitable data transformation (e.g., logarithmic, square root, Box-Cox) to reduce skewness.
-Severity: Medium
+Step 4: Manage high cardinality features
+Affected columns: `track_id`, `track_name`, `artist_name`, `album_name`, `release_date`
+Condition: Skip if these features are used purely for identification (like `track_id` as a primary key) or if downstream models are robust to high cardinality without explicit preprocessing.
+Action: For `track_id`, confirm its role as a unique identifier and ensure its integrity. For `track_name`, `artist_name`, `album_name`, explore strategies such as grouping, aggregation, or applying advanced encoding methods (e.g., target encoding, feature hashing, or embeddings). For `release_date`, parse into a datetime object, extract relevant temporal features (e.g., year, month, day of week), or bin into broader time periods, then apply suitable encoding or feature engineering.
+Severity: High
 
-Step 5: Manage high cardinality features
-Affected columns: track_id, track_name, artist_name, album_name, release_date
-Condition: Skip if cardinality is no longer an issue for the intended use case.
-Action: For `track_id`, verify uniqueness. For other high cardinality columns, evaluate and apply appropriate encoding strategies based on downstream model requirements or group infrequent categories.
-Severity: Medium
-
-Overall cleaning complexity: High
+Overall cleaning complexity: high
