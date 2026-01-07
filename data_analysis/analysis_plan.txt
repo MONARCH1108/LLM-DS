@@ -1,0 +1,40 @@
+ANALYSIS PLAN
+=============
+
+PLAN OBJECTIVE
+--------------
+- Objective: To analyze the `popularity` of music tracks, segmented by their `explicit` status, for each `genre`.
+
+PLAN ASSUMPTIONS
+----------------
+- Assumption 1: The `genre` column contains discrete categories suitable for grouping the dataset.
+- Assumption 2: The `explicit` column contains binary values (0 and 1) that represent two distinct categories for segmentation.
+- Assumption 3: The `popularity` column is a numerical measure suitable for aggregation.
+
+PLAN STEPS
+----------
+Step 1:
+- Description: Group all records in the dataset based on their assigned `genre`.
+- Input Columns: `genre`, `explicit`, `popularity`
+- Operation Type: Grouping
+- Expected Output: A collection of record groups, where each group contains all records corresponding to a unique `genre`.
+
+Step 2:
+- Description: Within each `genre` group created in the previous step, further partition the records based on the value in the `explicit` column.
+- Input Columns: `explicit`, `popularity`
+- Operation Type: Segmentation
+- Expected Output: For each `genre`, two sub-groups of records are created, one for each distinct value of `explicit`.
+
+Step 3:
+- Description: For each sub-group defined by a unique combination of `genre` and `explicit` value, produce an aggregated representation of the `popularity` values.
+- Input Columns: `popularity`
+- Operation Type: Aggregation
+- Expected Output: A summary table containing `genre`, `explicit`, and an aggregated value for `popularity` for each combination.
+
+PLAN CONSTRAINTS
+----------------
+- Constraint 1: This plan describes operations to analyze recorded data; it does not assume or infer any causal relationship between `genre`, `explicit` status, and `popularity`.
+- Constraint 2: The specific statistical measure to be used for the aggregation of `popularity` is not defined in this plan.
+- Constraint 3: The definition, scale, and units of the `popularity` metric are not evident from the provided inputs.
+
+END OF ANALYSIS PLAN
