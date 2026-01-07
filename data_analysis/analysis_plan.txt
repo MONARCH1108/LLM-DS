@@ -3,38 +3,38 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- Objective: To analyze the `popularity` of music tracks, segmented by their `explicit` status, for each `genre`.
+- Objective: Identify the popularity score for the single most-streamed track within each distinct music genre.
 
 PLAN ASSUMPTIONS
 ----------------
-- Assumption 1: The `genre` column contains discrete categories suitable for grouping the dataset.
-- Assumption 2: The `explicit` column contains binary values (0 and 1) that represent two distinct categories for segmentation.
-- Assumption 3: The `popularity` column is a numerical measure suitable for aggregation.
+- Assumption 1: The `track_id` column uniquely identifies each track in the dataset.
+- Assumption 2: The `stream_count` column is a valid and consistent measure for identifying the "most streamed" track.
+- Assumption 3: Each track is associated with exactly one `genre`.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Group all records in the dataset based on their assigned `genre`.
-- Input Columns: `genre`, `explicit`, `popularity`
+- Description: Partition the dataset into distinct groups based on the unique values in the `genre` column.
+- Input Columns: `genre`, `track_id`, `stream_count`, `popularity`
 - Operation Type: Grouping
-- Expected Output: A collection of record groups, where each group contains all records corresponding to a unique `genre`.
+- Expected Output: A collection of data groups, where each group contains all records corresponding to a single genre.
 
 Step 2:
-- Description: Within each `genre` group created in the previous step, further partition the records based on the value in the `explicit` column.
-- Input Columns: `explicit`, `popularity`
-- Operation Type: Segmentation
-- Expected Output: For each `genre`, two sub-groups of records are created, one for each distinct value of `explicit`.
+- Description: Within each genre group, identify the single record that has the highest value for the `stream_count` column.
+- Input Columns: `track_id`, `stream_count`, `popularity`
+- Operation Type: Filtering / Ranking
+- Expected Output: A dataset containing one record for each genre. Each record represents the track with the highest `stream_count` within that genre and includes the `genre`, `track_id`, and `popularity` columns.
 
 Step 3:
-- Description: For each sub-group defined by a unique combination of `genre` and `explicit` value, produce an aggregated representation of the `popularity` values.
-- Input Columns: `popularity`
-- Operation Type: Aggregation
-- Expected Output: A summary table containing `genre`, `explicit`, and an aggregated value for `popularity` for each combination.
+- Description: From the filtered dataset, present the `popularity` value for each genre's most-streamed track.
+- Input Columns: `genre`, `track_id`, `popularity`
+- Operation Type: Selection
+- Expected Output: A final output listing each `genre` alongside the corresponding `popularity` value of its most-streamed track.
 
 PLAN CONSTRAINTS
 ----------------
-- Constraint 1: This plan describes operations to analyze recorded data; it does not assume or infer any causal relationship between `genre`, `explicit` status, and `popularity`.
-- Constraint 2: The specific statistical measure to be used for the aggregation of `popularity` is not defined in this plan.
-- Constraint 3: The definition, scale, and units of the `popularity` metric are not evident from the provided inputs.
+- Constraint 1: This plan does not specify the method for handling ties. If multiple tracks within the same genre have the identical highest `stream_count`, the selection criteria are not defined.
+- Constraint 2: The specific definitions, units, and scales for the `popularity` and `stream_count` metrics are not evident from the provided inputs.
+- Constraint 3: The analysis is limited to the values as recorded and does not support any inference of a causal relationship between `stream_count` and `popularity`.
 
 END OF ANALYSIS PLAN

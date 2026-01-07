@@ -1,0 +1,52 @@
+OBJECTIVE
+Identify the popularity score for the single most-streamed track within each distinct music genre.
+
+ASSUMPTIONS
+ASSUMPTION_1
+The track_id column uniquely identifies each track in the dataset.
+ASSUMPTION_2
+The stream_count column is a valid and consistent measure for identifying the most streamed track.
+ASSUMPTION_3
+Each track is associated with exactly one genre.
+
+STEPS
+STEP_1
+OPERATION: group
+DESCRIPTION: Partition the dataset into distinct groups based on the unique values in the genre column.
+GROUP_BY_COLUMNS:
+- genre
+INPUT_COLUMNS:
+- genre
+- track_id
+- stream_count
+- popularity
+
+STEP_2
+OPERATION: rank_and_filter
+DESCRIPTION: Within each genre group, identify the single record that has the highest value for the stream_count column.
+PARTITION_BY_COLUMNS:
+- genre
+ORDER_BY_COLUMN: stream_count
+ORDER_DIRECTION: DESCENDING
+RANK_LIMIT: 1
+TIE_HANDLING: UNDEFINED
+INPUT_COLUMNS:
+- genre
+- track_id
+- stream_count
+- popularity
+OUTPUT_COLUMNS:
+- genre
+- track_id
+- popularity
+
+STEP_3
+OPERATION: select
+DESCRIPTION: From the filtered dataset, present the popularity value for each genre's most-streamed track.
+INPUT_COLUMNS:
+- genre
+- track_id
+- popularity
+OUTPUT_COLUMNS:
+- genre
+- popularity
