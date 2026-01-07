@@ -1,10 +1,5 @@
-# data_analysis/profile_to_text.py
-
 from typing import Dict, Any
 from pathlib import Path
-
-
-DIVIDER = "-" * 60
 
 
 def fmt(v):
@@ -41,7 +36,6 @@ def profile_to_text(
     # ------------------------------------------------------------------
     lines.append("DATASET PROFILE — FACTUAL DESCRIPTION ONLY")
     lines.append("NO INTERPRETATION. NO CONCLUSIONS. NO SUGGESTIONS.")
-    lines.append(DIVIDER)
     lines.append("")
 
     # ------------------------------------------------------------------
@@ -49,7 +43,6 @@ def profile_to_text(
     # ------------------------------------------------------------------
     shape = profile.get("shape", {})
     lines.append("DATASET OVERVIEW")
-    lines.append(DIVIDER)
     lines.append(f"- Rows: {shape.get('rows')}")
     lines.append(f"- Columns: {shape.get('columns')}")
     lines.append("")
@@ -58,7 +51,6 @@ def profile_to_text(
     # COLUMN SCHEMA
     # ------------------------------------------------------------------
     lines.append("COLUMN SCHEMA (NAME : DTYPE)")
-    lines.append(DIVIDER)
     for col in sorted(profile.get("dtypes", {})):
         lines.append(f"- {col}: {profile['dtypes'][col]}")
     lines.append("")
@@ -67,7 +59,6 @@ def profile_to_text(
     # COLUMN GROUPS
     # ------------------------------------------------------------------
     lines.append("COLUMN GROUPS")
-    lines.append(DIVIDER)
     for group in sorted(profile.get("column_groups", {})):
         cols = profile["column_groups"][group]
         if cols:
@@ -80,7 +71,6 @@ def profile_to_text(
     # SAMPLE ROWS
     # ------------------------------------------------------------------
     lines.append("SAMPLE ROWS (FIRST N)")
-    lines.append(DIVIDER)
     for i, row in enumerate(profile.get("sample_rows", []), start=1):
         lines.append(f"- Row {i}: {row}")
     lines.append("")
@@ -91,7 +81,6 @@ def profile_to_text(
     numeric_stats = profile.get("numeric_stats", {})
     if numeric_stats:
         lines.append("NUMERIC STATISTICS (SUMMARY)")
-        lines.append(DIVIDER)
         for stat_name in sorted(numeric_stats):
             lines.append(f"- {stat_name}:")
             for col in sorted(numeric_stats[stat_name]):
@@ -104,7 +93,6 @@ def profile_to_text(
     # MISSING VALUES
     # ------------------------------------------------------------------
     lines.append("MISSING VALUE SUMMARY")
-    lines.append(DIVIDER)
     missing = profile.get("missing_summary", {})
     if missing:
         for col in sorted(missing):
@@ -121,7 +109,6 @@ def profile_to_text(
     # CARDINALITY
     # ------------------------------------------------------------------
     lines.append("COLUMN CARDINALITY")
-    lines.append(DIVIDER)
     for col in sorted(profile.get("cardinality", {})):
         lines.append(f"- {col}: {profile['cardinality'][col]}")
     lines.append("")
@@ -130,7 +117,6 @@ def profile_to_text(
     # POSSIBLE IDENTIFIERS
     # ------------------------------------------------------------------
     lines.append("POSSIBLE IDENTIFIER COLUMNS")
-    lines.append(DIVIDER)
     identifiers = profile.get("possible_identifiers", [])
     if identifiers:
         for col in sorted(identifiers):
@@ -143,7 +129,6 @@ def profile_to_text(
     # LOW INFORMATION COLUMNS
     # ------------------------------------------------------------------
     lines.append("LOW INFORMATION COLUMNS")
-    lines.append(DIVIDER)
     low_info = profile.get("low_information_columns", [])
     if low_info:
         for col in sorted(low_info):
@@ -157,7 +142,6 @@ def profile_to_text(
     # ------------------------------------------------------------------
     dup = profile.get("duplicate_rows", {})
     lines.append("DUPLICATE ROW SUMMARY (STRUCTURAL SIGNAL)")
-    lines.append(DIVIDER)
     lines.append(f"- Duplicate row count: {dup.get('duplicate_row_count')}")
     lines.append(f"- Duplicate row percentage: {fmt(dup.get('duplicate_row_pct'))}")
     lines.append("")
@@ -166,7 +150,6 @@ def profile_to_text(
     # ZERO VALUE SUMMARY
     # ------------------------------------------------------------------
     lines.append("ZERO VALUE SUMMARY (STRUCTURAL SIGNAL)")
-    lines.append(DIVIDER)
     zero_vals = profile.get("zero_value_summary", {})
     if zero_vals:
         for col in sorted(zero_vals):
@@ -179,7 +162,6 @@ def profile_to_text(
     # TEXT LENGTH SUMMARY
     # ------------------------------------------------------------------
     lines.append("TEXT LENGTH SUMMARY (STRUCTURAL SIGNAL)")
-    lines.append(DIVIDER)
     text_len = profile.get("text_length_summary", {})
     if text_len:
         for col in sorted(text_len):
@@ -199,7 +181,6 @@ def profile_to_text(
     skew = profile.get("numeric_skew", {})
     if skew:
         lines.append("NUMERIC SKEW (STATISTICAL SIGNAL)")
-        lines.append(DIVIDER)
         for col in sorted(skew):
             lines.append(f"- {col}: {fmt(skew[col])}")
         lines.append("")
@@ -207,7 +188,6 @@ def profile_to_text(
     # ------------------------------------------------------------------
     # FOOTER
     # ------------------------------------------------------------------
-    lines.append(DIVIDER)
     lines.append("END OF DATASET PROFILE")
 
     text_output = "\n".join(lines)
