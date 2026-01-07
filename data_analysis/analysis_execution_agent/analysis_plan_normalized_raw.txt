@@ -1,52 +1,31 @@
 OBJECTIVE
-Identify the popularity score for the single most-streamed track within each distinct music genre.
+To produce an aggregated representation of track popularity for each unique combination of genre and country.
 
 ASSUMPTIONS
 ASSUMPTION_1
-The track_id column uniquely identifies each track in the dataset.
+The columns genre, country, and popularity contain the necessary information to fulfill the analysis objective.
 ASSUMPTION_2
-The stream_count column is a valid and consistent measure for identifying the most streamed track.
+Each record in the dataset represents a single track with a corresponding genre, country, and popularity value.
 ASSUMPTION_3
-Each track is associated with exactly one genre.
+The country column represents a meaningful geographical attribute associated with each track.
 
 STEPS
 STEP_1
-OPERATION: group
-DESCRIPTION: Partition the dataset into distinct groups based on the unique values in the genre column.
-GROUP_BY_COLUMNS:
+DESCRIPTION: Group all records in the dataset based on their unique genre and country values.
+OPERATION: GROUP
+GROUP_BY_COLUMNS
 - genre
-INPUT_COLUMNS:
-- genre
-- track_id
-- stream_count
-- popularity
+- country
 
 STEP_2
-OPERATION: rank_and_filter
-DESCRIPTION: Within each genre group, identify the single record that has the highest value for the stream_count column.
-PARTITION_BY_COLUMNS:
-- genre
-ORDER_BY_COLUMN: stream_count
-ORDER_DIRECTION: DESCENDING
-RANK_LIMIT: 1
-TIE_HANDLING: UNDEFINED
-INPUT_COLUMNS:
-- genre
-- track_id
-- stream_count
-- popularity
-OUTPUT_COLUMNS:
-- genre
-- track_id
-- popularity
+DESCRIPTION: For each group created in the previous step, apply an aggregation operation to the corresponding popularity values.
+OPERATION: AGGREGATE
+TARGET_COLUMN: popularity
+AGGREGATION_FUNCTION: UNCERTAINTY(Not specified in the plan)
+OUTPUT_COLUMN_NAME: aggregated_popularity
 
-STEP_3
-OPERATION: select
-DESCRIPTION: From the filtered dataset, present the popularity value for each genre's most-streamed track.
-INPUT_COLUMNS:
-- genre
-- track_id
-- popularity
-OUTPUT_COLUMNS:
-- genre
-- popularity
+CONSTRAINTS
+CONSTRAINT_1
+The semantic meaning and scale of the popularity column are not defined in the provided inputs. The interpretation of the resulting aggregated values is therefore limited.
+CONSTRAINT_2
+The analysis does not consider any temporal information, such as release_date. The results represent an aggregation across the entire time span of the dataset.

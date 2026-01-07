@@ -3,37 +3,31 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- Objective: To describe the relationship between a track's `popularity` score and its `genre`, `danceability`, and `energy` audio features, based on the provided dataset.
+- To produce an aggregated representation of track `popularity` for each unique combination of `genre` and `country`.
 
 PLAN ASSUMPTIONS
 ----------------
-- Assumption 1: The `popularity` column contains a consistent and valid numerical representation suitable for analysis.
-- Assumption 2: The `genre`, `danceability`, and `energy` columns contain valid data corresponding to each track record.
-- Assumption 3: Each row in the dataset, uniquely identified by `track_id`, represents a distinct track.
+- Assumption 1: The columns `genre`, `country`, and `popularity` contain the necessary information to fulfill the analysis objective.
+- Assumption 2: Each record in the dataset represents a single track with a corresponding `genre`, `country`, and `popularity` value.
+- Assumption 3: The `country` column represents a meaningful geographical attribute associated with each track.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Analyze the `popularity` scores across different music genres.
-- Input Columns: `genre`, `popularity`
-- Operation Type: Grouping and Aggregation
-- Expected Output: A summary where each unique value from the `genre` column is associated with an aggregated representation of the corresponding `popularity` values.
+- Description: Group all records in the dataset based on their unique `genre` and `country` values.
+- Input Columns: `genre`, `country`
+- Operation Type: Grouping
+- Expected Output: A partitioned dataset where each partition contains records that share the same combination of `genre` and `country`.
 
 Step 2:
-- Description: Examine the relationship between the numerical audio feature `danceability` and the `popularity` score for each track.
-- Input Columns: `danceability`, `popularity`
-- Operation Type: Comparison
-- Expected Output: A representation of the co-occurring values of `danceability` and `popularity` for each record in the dataset.
-
-Step 3:
-- Description: Examine the relationship between the numerical audio feature `energy` and the `popularity` score for each track.
-- Input Columns: `energy`, `popularity`
-- Operation Type: Comparison
-- Expected Output: A representation of the co-occurring values of `energy` and `popularity` for each record in the dataset.
+- Description: For each group created in the previous step, apply an aggregation operation to the corresponding `popularity` values.
+- Input Columns: `popularity`
+- Operation Type: Aggregation
+- Expected Output: A summary table containing each unique `genre` and `country` combination along with its resulting aggregated `popularity` value.
 
 PLAN CONSTRAINTS
 ----------------
-- Constraint 1: The analysis is descriptive and will identify patterns or associations. Based on the provided inputs, it is not possible to determine causal relationships or "influence" as stated in the user query.
-- Constraint 2: The semantic meaning, units, and scale for the numerical columns `popularity`, `danceability`, and `energy` are not defined in the dataset profile. Interpretation of the analysis results is subject to this uncertainty.
+- Constraint 1: The semantic meaning and scale of the `popularity` column are not defined in the provided inputs. The interpretation of the resulting aggregated values is therefore limited.
+- Constraint 2: The analysis does not consider any temporal information, such as `release_date`. The results represent an aggregation across the entire time span of the dataset.
 
 END OF ANALYSIS PLAN
