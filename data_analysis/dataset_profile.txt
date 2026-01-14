@@ -19,7 +19,7 @@ COLUMN SCHEMA (NAME : DTYPE)
 - label: object
 - loudness: float64
 - mode: int64
-- popularity: float64
+- popularity: int64
 - release_date: object
 - stream_count: float64
 - tempo: float64
@@ -33,11 +33,11 @@ COLUMN GROUPS
 - numerical: danceability, duration_ms, energy, explicit, instrumentalness, key, loudness, mode, popularity, stream_count, tempo
 
 SAMPLE ROWS (FIRST N)
-- Row 1: {'track_id': 'TRK-BEBD53DA84E1', 'track_name': 'Agent every (0)', 'artist_name': 'Noah Rhodes', 'album_name': 'Beautiful instead', 'release_date': '2016-04-01', 'genre': 'Pop', 'duration_ms': 234194, 'popularity': 55.0, 'danceability': 0.15, 'energy': 0.74, 'key': 9, 'loudness': -32.22, 'mode': 0, 'instrumentalness': 0.436, 'tempo': 73.12, 'stream_count': 114.0175425099138, 'country': 'Brazil', 'explicit': 0, 'label': 'Universal Music'}
-- Row 2: {'track_id': 'TRK-6A32496762D7', 'track_name': 'Night respond', 'artist_name': 'Jennifer Cole', 'album_name': 'Table', 'release_date': '2022-04-15', 'genre': 'Metal', 'duration_ms': 375706, 'popularity': 45.0, 'danceability': 0.44, 'energy': 0.46, 'key': 0, 'loudness': -14.02, 'mode': 0, 'instrumentalness': 0.223, 'tempo': 157.74, 'stream_count': 31.622776601683796, 'country': 'France', 'explicit': 1, 'label': 'Island Records'}
-- Row 3: {'track_id': 'TRK-47AA7523463E', 'track_name': 'Future choice whatever', 'artist_name': 'Brandon Davis', 'album_name': 'Page southern', 'release_date': '2016-02-23', 'genre': 'Rock', 'duration_ms': 289191, 'popularity': 55.0, 'danceability': 0.62, 'energy': 0.8, 'key': 8, 'loudness': -48.26, 'mode': 1, 'instrumentalness': 0.584, 'tempo': 71.03, 'stream_count': 31.622776601683796, 'country': 'Germany', 'explicit': 1, 'label': 'XL Recordings'}
-- Row 4: {'track_id': 'TRK-25ADA22E3B06', 'track_name': 'Bad fall pick those', 'artist_name': 'Corey Jones', 'album_name': 'Spring', 'release_date': '2015-10-12', 'genre': 'Pop', 'duration_ms': 209484, 'popularity': 51.0, 'danceability': 0.78, 'energy': 0.98, 'key': 1, 'loudness': -34.47, 'mode': 1, 'instrumentalness': 0.684, 'tempo': 149.0, 'stream_count': 31.622776601683796, 'country': 'France', 'explicit': 0, 'label': 'Warner Music'}
-- Row 5: {'track_id': 'TRK-9245F2AD996A', 'track_name': 'Husband', 'artist_name': 'Mark Diaz', 'album_name': 'Great prove', 'release_date': '2022-07-08', 'genre': 'Indie', 'duration_ms': 127435, 'popularity': 39.0, 'danceability': 0.74, 'energy': 0.18, 'key': 10, 'loudness': -17.84, 'mode': 0, 'instrumentalness': 0.304, 'tempo': 155.85, 'stream_count': 44.7213595499958, 'country': 'United States', 'explicit': 0, 'label': 'Independent'}
+- Row 1: {'track_id': 'TRK-BEBD53DA84E1', 'track_name': 'Agent every (0)', 'artist_name': 'Noah Rhodes', 'album_name': 'Beautiful instead', 'release_date': '2016-04-01', 'genre': 'Pop', 'duration_ms': 234194, 'popularity': 55, 'danceability': 0.15, 'energy': 0.74, 'key': 9, 'loudness': -32.22, 'mode': 0, 'instrumentalness': 0.436, 'tempo': 73.12, 'stream_count': 114.0175425099138, 'country': 'Brazil', 'explicit': 0, 'label': 'Universal Music'}
+- Row 2: {'track_id': 'TRK-6A32496762D7', 'track_name': 'Night respond', 'artist_name': 'Jennifer Cole', 'album_name': 'Table', 'release_date': '2022-04-15', 'genre': 'Metal', 'duration_ms': 375706, 'popularity': 45, 'danceability': 0.44, 'energy': 0.46, 'key': 0, 'loudness': -14.02, 'mode': 0, 'instrumentalness': 0.223, 'tempo': 157.74, 'stream_count': 31.622776601683796, 'country': 'France', 'explicit': 1, 'label': 'Island Records'}
+- Row 3: {'track_id': 'TRK-47AA7523463E', 'track_name': 'Future choice whatever', 'artist_name': 'Brandon Davis', 'album_name': 'Page southern', 'release_date': '2016-02-23', 'genre': 'Rock', 'duration_ms': 289191, 'popularity': 55, 'danceability': 0.62, 'energy': 0.8, 'key': 8, 'loudness': -48.26, 'mode': 1, 'instrumentalness': 0.584, 'tempo': 71.03, 'stream_count': 31.622776601683796, 'country': 'Germany', 'explicit': 1, 'label': 'XL Recordings'}
+- Row 4: {'track_id': 'TRK-25ADA22E3B06', 'track_name': 'Bad fall pick those', 'artist_name': 'Corey Jones', 'album_name': 'Spring', 'release_date': '2015-10-12', 'genre': 'Pop', 'duration_ms': 209484, 'popularity': 51, 'danceability': 0.78, 'energy': 0.98, 'key': 1, 'loudness': -34.47, 'mode': 1, 'instrumentalness': 0.684, 'tempo': 149.0, 'stream_count': 31.622776601683796, 'country': 'France', 'explicit': 0, 'label': 'Warner Music'}
+- Row 5: {'track_id': 'TRK-9245F2AD996A', 'track_name': 'Husband', 'artist_name': 'Mark Diaz', 'album_name': 'Great prove', 'release_date': '2022-07-08', 'genre': 'Indie', 'duration_ms': 127435, 'popularity': 39, 'danceability': 0.74, 'energy': 0.18, 'key': 10, 'loudness': -17.84, 'mode': 0, 'instrumentalness': 0.304, 'tempo': 155.85, 'stream_count': 44.7213595499958, 'country': 'United States', 'explicit': 0, 'label': 'Independent'}
 
 NUMERIC STATISTICS (SUMMARY)
 - count:
@@ -61,8 +61,8 @@ NUMERIC STATISTICS (SUMMARY)
   - key: 11.0
   - loudness: -1.0
   - mode: 1.0
-  - popularity: 85.5
-  - stream_count: 144.9138
+  - popularity: 93.0
+  - stream_count: 2398.143
   - tempo: 200.0
 - mean:
   - danceability: 0.5207
@@ -73,8 +73,8 @@ NUMERIC STATISTICS (SUMMARY)
   - key: 5.516
   - loudness: -27.9993
   - mode: 0.5001
-  - popularity: 48.0058
-  - stream_count: 68.1245
+  - popularity: 48.1153
+  - stream_count: 135.8465
   - tempo: 129.9484
 - min:
   - danceability: 0.05
@@ -85,7 +85,7 @@ NUMERIC STATISTICS (SUMMARY)
   - key: 0.0
   - loudness: -55.0
   - mode: 0.0
-  - popularity: 9.5
+  - popularity: 0.0
   - stream_count: 31.6228
   - tempo: 60.0
 - std:
@@ -97,8 +97,8 @@ NUMERIC STATISTICS (SUMMARY)
   - key: 3.4541
   - loudness: 15.5984
   - mode: 0.5
-  - popularity: 14.3598
-  - stream_count: 42.8632
+  - popularity: 14.6752
+  - stream_count: 309.7368
   - tempo: 40.4443
 
 MISSING VALUE SUMMARY
@@ -118,9 +118,9 @@ COLUMN CARDINALITY
 - label: 8
 - loudness: 5401
 - mode: 2
-- popularity: 78
+- popularity: 92
 - release_date: 4018
-- stream_count: 21
+- stream_count: 1868
 - tempo: 13967
 - track_id: 85000
 - track_name: 68952
@@ -144,7 +144,7 @@ ZERO VALUE SUMMARY (STRUCTURAL SIGNAL)
 - key: 6995
 - loudness: 0
 - mode: 42488
-- popularity: 0
+- popularity: 1
 - stream_count: 0
 - tempo: 0
 
@@ -165,8 +165,8 @@ NUMERIC SKEW (STATISTICAL SIGNAL)
 - instrumentalness: -0.0001
 - key: -0.0054
 - loudness: -0.0009
-- popularity: 0.4717
-- stream_count: 0.8727
+- popularity: 0.5929
+- stream_count: 5.5183
 - tempo: 0.0003
 
 END OF DATASET PROFILE

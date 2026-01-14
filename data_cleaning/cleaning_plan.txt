@@ -1,25 +1,25 @@
 Step 1: Handle missing values
-Affected columns: `track_name`, `album_name`
-Condition: Skip if these columns are not critical for analysis or modeling, allowing downstream steps to handle nulls.
-Action: Impute missing values (e.g., with a placeholder like 'Unknown', mode, or through advanced imputation techniques) or strategically drop rows if the number of missing values is very low and impact on dataset integrity is minimal.
+Affected columns: 'track_name', 'album_name'
+Condition: Skip if these missing values are acceptable for the intended analysis, or if a downstream system can robustly handle nulls in these specific columns.
+Action: Impute with a placeholder like 'Unknown' or mode, or remove affected rows/columns if the proportion of missing data is significant and imputation is not feasible, ensuring impact on dataset integrity is minimal.
 Severity: Medium
 
-Step 2: Detect and treat outliers
-Affected columns: `popularity`, `stream_count`, `explicit`
-Condition: Skip if outliers represent valid, extreme data points critical for the domain, or if treatment negatively impacts specific downstream model performance or business logic.
-Action: For `stream_count` and `popularity`, analyze outlier nature and apply appropriate techniques such as capping, transformation, or removal of extreme values. For `explicit`, re-evaluate its data type and values; if it's expected to be binary, outliers might indicate data errors needing correction (e.g., mapping non-binary values to 0 or 1).
+Step 2: Handle outliers
+Affected columns: 'popularity', 'stream_count', 'explicit'
+Condition: Skip if the business context requires all data, including outliers, to be preserved, or if the analytical methods are robust to extreme values without prior treatment.
+Action: For 'stream_count' and 'explicit' (severe), investigate root causes and consider capping, transformation, or removal of extreme values. For 'popularity', investigate and consider soft capping or transformation. Document all decisions.
 Severity: High
 
-Step 3: Correct data skewness
-Affected columns: `stream_count`
-Condition: Skip if skewness does not impede the performance of target models or if transformations significantly reduce interpretability for the intended use case.
-Action: Apply appropriate mathematical transformations (e.g., log, square root, Box-Cox) to reduce the skewness in the distribution of `stream_count`.
+Step 3: Address data skewness
+Affected columns: 'stream_count'
+Condition: Skip if the target models or statistical methods are not sensitive to skewed data distributions, or if data interpretability is prioritized over statistical assumptions.
+Action: Apply appropriate mathematical transformations (e.g., log, square root, Box-Cox) to 'stream_count' to reduce skewness, aiming for a more normal distribution, which can improve model performance.
 Severity: Medium
 
-Step 4: Manage high cardinality features
-Affected columns: `track_id`, `track_name`, `artist_name`, `album_name`, `release_date`
-Condition: Skip if these features are used purely for identification (like `track_id` as a primary key) or if downstream models are robust to high cardinality without explicit preprocessing.
-Action: For `track_id`, confirm its role as a unique identifier and ensure its integrity. For `track_name`, `artist_name`, `album_name`, explore strategies such as grouping, aggregation, or applying advanced encoding methods (e.g., target encoding, feature hashing, or embeddings). For `release_date`, parse into a datetime object, extract relevant temporal features (e.g., year, month, day of week), or bin into broader time periods, then apply suitable encoding or feature engineering.
+Step 4: Address high cardinality features
+Affected columns: 'track_id', 'track_name', 'artist_name', 'album_name', 'release_date'
+Condition: Skip if these columns are not used as features in modeling or if the analytical task can directly consume raw high cardinality categorical data without requiring encoding.
+Action: Implement appropriate encoding strategies (e.g., label encoding, one-hot encoding, target encoding, or hashing) for these high cardinality features to make them suitable for machine learning algorithms, potentially including dimensionality reduction techniques.
 Severity: High
 
 Overall cleaning complexity: high

@@ -63,7 +63,7 @@ def cleaning_pipeline_tool(dataset_path: str)->str:
     generate_cleaning_plan(dataset_path)
     cleaned_df = run_execution_agent(
         dataset_path=dataset_path,
-        plan_path="data_cleaning/cleaning_plan.txt"
+        plan_path=r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS\data_cleaning\cleaning_plan.txt"
     )
     return (
         "Data cleaning completed successfully.\n"
