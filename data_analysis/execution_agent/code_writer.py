@@ -29,7 +29,7 @@ You MUST correct this in the new code.
 """
 
     prompt = f"""
-You are a senior data analyst executing an analysis plan.
+You are a senior data analyst executing an analysis plan step-by-step.
 
 You are executing STEP {step_number} of the plan.
 
@@ -37,33 +37,81 @@ FULL ANALYSIS PLAN:
 -------------------
 {chr(10).join(full_plan)}
 
-CURRENT STEP:
--------------
+CURRENT STEP (AUTHORITATIVE):
+-----------------------------
 {step_text}
 
-CURRENT DATAFRAME:
-------------------
-Columns: {list(df.columns)}
-Shape: {df.shape}
-Preview:
+CURRENT DATAFRAME (AUTHORITATIVE):
+---------------------------------
+- Type: pandas.DataFrame
+- Columns: {list(df.columns)}
+- Shape: {df.shape}
+- Preview:
 {df.head(5)}
 
+======================
+ABSOLUTE EXECUTION CONTRACT (NON-NEGOTIABLE)
+======================
+
+1. `df` MUST ALWAYS remain a pandas.DataFrame.
+2. `df` MUST be fully materialized after this step.
+3. Lazy objects are FORBIDDEN.
+
+THE FOLLOWING ARE STRICTLY FORBIDDEN:
+- df = df.groupby(...)
+- df = some_groupby_object
+- Creating synthetic or dummy data
+- Using variables other than `df`
+- Referring to `original_df`
+- Returning partial or intermediate objects
+
+IF GROUPING IS REQUIRED:
+- You MUST combine it with an aggregation or transformation
+- You MUST call `.reset_index()`
+- The final result MUST be a DataFrame
+
+VALID EXAMPLES:
+- df = df.groupby([...]).agg(...).reset_index()
+- df = df.groupby([...])[...].mean().reset_index(name="...")
+
+INVALID EXAMPLES:
+- df = df.groupby(...)
+- grouped = df.groupby(...)
+
+======================
+SELF-CHECK (SILENT, INTERNAL)
+======================
+
+Before returning code, verify internally:
+- Is `df` a pandas DataFrame at the end?
+- Would `type(df)` be DataFrame (not GroupBy)?
+- Does this code change ONLY the columns/rows implied by the step?
+- Is there a simpler DataFrame-producing alternative if grouping feels ambiguous?
+
+If the step description is underspecified:
+- Choose the MOST CONSERVATIVE valid aggregation
+- Prefer `count` or `mean` depending on column type
+
+======================
 STRICT RULES (MANDATORY):
+======================
 - Use ONLY pandas
 - NO imports
 - NO file I/O
 - NO prints
 - NO plotting
-- You MUST reassign df
+- You MUST reassign df exactly once
 - Output ONLY valid Python code
+- The FINAL LINE MUST assign the result to `df`
 
 {feedback_block}
 
-Think internally. Do NOT explain.
+Do NOT explain.
+Do NOT comment.
+Do NOT add extra variables.
 
 OUTPUT:
 Return ONLY executable Python code.
-The final line MUST assign the result to `df`.
 """
 
     response = client.chat.completions.create(

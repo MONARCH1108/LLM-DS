@@ -3,32 +3,27 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- Objective: To produce a survival-related measure for each distinct combination of passenger class and sex.
+- To produce a summarized dataset that describes survival outcomes, along with age and fare characteristics, for each distinct combination of passenger sex and class.
 
 PLAN ASSUMPTIONS
 ----------------
-- Assumption 1: The `Survived` column, containing values of 0 and 1, represents the outcome of interest and is suitable for an aggregation operation to derive a survival measure. This is based on the Analysis Understanding, which identifies `Survived` as a candidate target column.
-- Assumption 2: The `Pclass` and `Sex` columns contain the discrete categories required to group the data as specified in the user query. This is supported by the Dataset Profile and the Analysis Understanding.
-- Assumption 3: Each row in the dataset is treated as a distinct record for the purpose of this analysis, irrespective of the 101 duplicate rows identified in the Dataset Profile.
+- Assumption 1: The `Survived` column is the primary outcome variable for the analysis, where its values represent distinct survival states.
+- Assumption 2: The columns `Sex` and `Pclass` are the primary categorical variables for segmenting the dataset.
+- Assumption 3: The analysis will be performed on the dataset as provided, which includes 101 duplicate rows as noted in the data profile.
+- Assumption 4: Records with missing values in the `Age` column will be excluded from any calculations involving that column.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Partition the dataset into groups, where each group contains all records that share the same unique combination of values from the `Pclass` and `Sex` columns.
-- Input Columns: `Pclass`, `Sex`
-- Operation Type: Grouping
-- Expected Output: A partitioned dataset where records are organized by their combined `Pclass` and `Sex` values.
-
-Step 2:
-- Description: For each group generated in the previous step, apply an aggregation operation to the `Survived` column to produce a single, representative numerical value for that group.
-- Input Columns: `Survived`
-- Operation Type: Aggregation
-- Expected Output: A summary table mapping each unique (`Pclass`, `Sex`) combination to its corresponding aggregated value from the `Survived` column.
+- Description: Group records by the unique combinations of values in the `Sex` and `Pclass` columns. For each resulting group, apply aggregation operations to the `Survived`, `Age`, and `Fare` columns to create a summarized representation.
+- Input Columns: `Sex`, `Pclass`, `Survived`, `Age`, `Fare`
+- Operation Type: Grouping and Aggregation
+- Expected Output: A materialized tabular dataset where each row corresponds to a unique combination of `Sex` and `Pclass`. The dataset will contain the grouping columns (`Sex`, `Pclass`) and new columns representing the aggregated values for `Survived`, `Age`, and `Fare`.
 
 PLAN CONSTRAINTS
 ----------------
-- Constraint 1: The specific statistical measure for the aggregation operation in Step 2 is not defined. The interpretation of the final output depends on the choice of this measure.
-- Constraint 2: The analysis will be performed on the dataset as-is, including the 101 duplicate rows noted in the Dataset Profile. The presence of these rows may influence the final aggregated results.
-- Constraint 3: The `Age` and `Embarked` columns contain missing values as noted in the Dataset Profile. While these columns are not used in this plan, this characteristic of the dataset is noted.
+- Constraint 1: The `Age` column contains 177 missing values (19.87% of records). Any operation on this column will only consider the 714 non-missing records.
+- Constraint 2: The semantic meaning of the `Parch` and `SibSp` columns is not evident from the provided inputs and they are therefore excluded from this analysis plan.
+- Constraint 3: The `Fare` column exhibits a notable positive skew, which is a structural characteristic of the data that will be reflected in any summarized output.
 
 END OF ANALYSIS PLAN

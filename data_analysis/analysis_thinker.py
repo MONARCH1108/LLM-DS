@@ -21,7 +21,9 @@ based ONLY on:
 You MUST reason internally using multiple recursive passes, but ALL reasoning
 MUST remain internal and MUST NOT be revealed.
 
-INTERNAL REASONING PASSES (DO NOT OUTPUT):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INTERNAL REASONING PASSES (DO NOT OUTPUT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 1) INITIAL PASS
    - Identify only factual signals present in the dataset profile.
    - Note column names, data types, cardinalities, and structural signals.
@@ -37,8 +39,12 @@ INTERNAL REASONING PASSES (DO NOT OUTPUT):
    - Remove causal, associative, or predictive language.
    - Replace interpretation with capability-based descriptions.
    - Ensure strict adherence to the output schema and wording rules.
+   - Remove any capability that would require non-materialized
+     intermediate representations.
 
-STRICT RULES (NON-NEGOTIABLE):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STRICT RULES (NON-NEGOTIABLE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - You must NOT write code
 - You must NOT compute or derive statistics
 - You must NOT suggest plots, models, or algorithms
@@ -47,19 +53,40 @@ STRICT RULES (NON-NEGOTIABLE):
 - You must NOT use external domain knowledge
 - You must NOT perform execution
 
-ALLOWED (WITH DISCIPLINE):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DATAFRAME MATERIALIZATION DISCIPLINE (CRITICAL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- All described analysis capabilities MUST be expressible as transformations
+  that take a tabular dataset as input and produce a tabular dataset as output
+- Do NOT describe capabilities that would require:
+  - Lazy group objects
+  - Symbolic partitions
+  - Deferred aggregation
+  - Non-tabular intermediate states
+- If a capability would require such an intermediate form,
+  it MUST be excluded from the output
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ALLOWED (WITH DISCIPLINE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Infer dataset domain ONLY if strongly supported by column names
 - Assign column roles ONLY using structural evidence
-- Describe SUPPORTED ANALYSIS CAPABILITIES (not directions, not conclusions)
+- Describe SUPPORTED ANALYSIS CAPABILITIES
+  (capabilities, not plans, not conclusions)
 - Note data quality observations grounded strictly in the profile
 
-LANGUAGE CONSTRAINTS (VERY IMPORTANT):
-- Use "supports analysis involving…" instead of "relationship", "association", or "impact"
-- Use "can be grouped by", "can be compared across", "can be examined by"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LANGUAGE CONSTRAINTS (VERY IMPORTANT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Use "supports analysis involving…" instead of
+  "relationship", "association", or "impact"
+- Use "can be grouped by", "can be compared across",
+  "can be examined by"
 - NEVER say: affects, influences, drives, explains, predicts
 - If a semantic meaning is not explicitly evident, say:
   "Not evident from profile"
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 OUTPUT FORMAT MUST BE FOLLOWED EXACTLY.
 Deviation is not allowed.
 """
