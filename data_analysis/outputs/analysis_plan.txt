@@ -3,40 +3,32 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- To analyze the distribution of track `popularity` within each `genre`.
-- To identify the artist with the highest aggregated `popularity` for each `genre`.
+- Objective: To produce a survival-related measure for each distinct combination of passenger class and sex.
 
 PLAN ASSUMPTIONS
 ----------------
-- Assumption 1: The `genre`, `artist_name`, and `popularity` columns are populated and suitable for grouping and aggregation operations as described in the Analysis Understanding.
-- Assumption 2: Each row in the dataset represents a unique track, as suggested by the `track_id` column in the Dataset Profile.
-- Assumption 3: The `popularity` score is a numerical value that can be meaningfully aggregated to represent an artist's overall popularity within a genre.
+- Assumption 1: The `Survived` column, containing values of 0 and 1, represents the outcome of interest and is suitable for an aggregation operation to derive a survival measure. This is based on the Analysis Understanding, which identifies `Survived` as a candidate target column.
+- Assumption 2: The `Pclass` and `Sex` columns contain the discrete categories required to group the data as specified in the user query. This is supported by the Dataset Profile and the Analysis Understanding.
+- Assumption 3: Each row in the dataset is treated as a distinct record for the purpose of this analysis, irrespective of the 101 duplicate rows identified in the Dataset Profile.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Group the dataset by `genre` to isolate the `popularity` values associated with each genre. This will allow for the examination of the collection of popularity scores for each genre.
-- Input Columns: `genre`, `popularity`
+- Description: Partition the dataset into groups, where each group contains all records that share the same unique combination of values from the `Pclass` and `Sex` columns.
+- Input Columns: `Pclass`, `Sex`
 - Operation Type: Grouping
-- Expected Output: A data structure that maps each unique value from the `genre` column to the corresponding collection of `popularity` values.
+- Expected Output: A partitioned dataset where records are organized by their combined `Pclass` and `Sex` values.
 
 Step 2:
-- Description: Group the dataset by both `genre` and `artist_name`. For each resulting group, apply an aggregation operation to the `popularity` values to produce a single representative value.
-- Input Columns: `genre`, `artist_name`, `popularity`
-- Operation Type: Grouping and Aggregation
-- Expected Output: A dataset where each row contains a unique `genre` and `artist_name` pair, along with the resulting aggregated `popularity` value.
-- Execution Consideration: The `artist_name` column has high cardinality, which may have performance implications for the grouping operation.
-
-Step 3:
-- Description: For each `genre`, order the results from the previous step based on the aggregated `popularity` value in descending order. Select the top record for each `genre`.
-- Input Columns: `genre`, `artist_name`, aggregated `popularity` (from Step 2)
-- Operation Type: Ranking and Selection
-- Expected Output: A dataset listing each `genre` and the single `artist_name` associated with the highest aggregated `popularity` value within that genre.
+- Description: For each group generated in the previous step, apply an aggregation operation to the `Survived` column to produce a single, representative numerical value for that group.
+- Input Columns: `Survived`
+- Operation Type: Aggregation
+- Expected Output: A summary table mapping each unique (`Pclass`, `Sex`) combination to its corresponding aggregated value from the `Survived` column.
 
 PLAN CONSTRAINTS
 ----------------
-- Constraint 1: This plan does not specify the statistical methods for characterizing a "distribution" or for the "aggregation" of `popularity`. The choice of specific statistical measures is outside the scope of this plan.
-- Constraint 2: The precise definition and calculation method for the `popularity` metric are not provided, as noted in the Analysis Understanding. The interpretation of the results is dependent on this unknown definition.
-- Constraint 3: This analysis plan describes associations between variables and does not assume or test for causality.
+- Constraint 1: The specific statistical measure for the aggregation operation in Step 2 is not defined. The interpretation of the final output depends on the choice of this measure.
+- Constraint 2: The analysis will be performed on the dataset as-is, including the 101 duplicate rows noted in the Dataset Profile. The presence of these rows may influence the final aggregated results.
+- Constraint 3: The `Age` and `Embarked` columns contain missing values as noted in the Dataset Profile. While these columns are not used in this plan, this characteristic of the dataset is noted.
 
 END OF ANALYSIS PLAN

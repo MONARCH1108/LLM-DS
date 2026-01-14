@@ -1,25 +1,28 @@
-Step 1: Handle missing values
-Affected columns: 'track_name', 'album_name'
-Condition: Skip if these missing values are acceptable for the intended analysis, or if a downstream system can robustly handle nulls in these specific columns.
-Action: Impute with a placeholder like 'Unknown' or mode, or remove affected rows/columns if the proportion of missing data is significant and imputation is not feasible, ensuring impact on dataset integrity is minimal.
-Severity: Medium
-
-Step 2: Handle outliers
-Affected columns: 'popularity', 'stream_count', 'explicit'
-Condition: Skip if the business context requires all data, including outliers, to be preserved, or if the analytical methods are robust to extreme values without prior treatment.
-Action: For 'stream_count' and 'explicit' (severe), investigate root causes and consider capping, transformation, or removal of extreme values. For 'popularity', investigate and consider soft capping or transformation. Document all decisions.
+Step 1: Handle Missing Values
+Affected columns: Age, Cabin, Embarked
+Condition: Proceed only if these columns still contain missing values.
+Action:
+    - For 'Age': Impute missing values with a suitable central tendency (e.g., median) or a more sophisticated method like K-nearest neighbors imputation, considering 'Pclass' or 'Title'.
+    - For 'Embarked': Impute missing values with the mode (most frequent value).
+    - For 'Cabin': Due to high missing count and high cardinality, consider creating a new binary feature indicating 'Has_Cabin' (1 for present, 0 for missing) and/or extracting the first letter as a new categorical feature, then dropping the original 'Cabin' column.
 Severity: High
 
-Step 3: Address data skewness
-Affected columns: 'stream_count'
-Condition: Skip if the target models or statistical methods are not sensitive to skewed data distributions, or if data interpretability is prioritized over statistical assumptions.
-Action: Apply appropriate mathematical transformations (e.g., log, square root, Box-Cox) to 'stream_count' to reduce skewness, aiming for a more normal distribution, which can improve model performance.
+Step 2: Address High Cardinality Categorical Features
+Affected columns: PassengerId, Name, Ticket, Cabin
+Condition: Proceed only if these columns exhibit high cardinality or are not directly suitable for modeling.
+Action:
+    - For 'PassengerId': Drop the column as it is a unique identifier.
+    - For 'Name': Extract meaningful features such as 'Title' (e.g., Mr., Mrs., Master) from the name string, then drop the original 'Name' column.
+    - For 'Ticket': Investigate if a pattern or category can be extracted; otherwise, consider dropping the column due to its high cardinality and potential lack of direct predictive power.
+    - For 'Cabin': If not already handled in Step 1, consolidate into fewer, more meaningful categories (e.g., by deck letter) or convert to an indicator of presence/absence.
 Severity: Medium
 
-Step 4: Address high cardinality features
-Affected columns: 'track_id', 'track_name', 'artist_name', 'album_name', 'release_date'
-Condition: Skip if these columns are not used as features in modeling or if the analytical task can directly consume raw high cardinality categorical data without requiring encoding.
-Action: Implement appropriate encoding strategies (e.g., label encoding, one-hot encoding, target encoding, or hashing) for these high cardinality features to make them suitable for machine learning algorithms, potentially including dimensionality reduction techniques.
+Step 3: Handle Outliers and Skewness for Numerical Features
+Affected columns: Age, SibSp, Parch, Fare
+Condition: Proceed if the numerical columns still contain severe outliers or exhibit high skewness.
+Action:
+    - For 'Parch' and 'Fare' (identified as having severe outliers and high skewness): Apply robust data transformation techniques (e.g., logarithmic, square root, Box-Cox) to mitigate skewness and reduce outlier impact, or use capping/winsorization methods.
+    - For 'Age' and 'SibSp': Evaluate the distribution and apply similar transformation or capping methods, especially for 'SibSp' which is also highly skewed, to improve model performance and assumption adherence.
 Severity: High
 
-Overall cleaning complexity: high
+Overall cleaning complexity: High

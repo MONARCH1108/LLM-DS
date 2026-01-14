@@ -1,24 +1,24 @@
 ### DATASET DOMAIN (IF SUPPORTED)
-- Domain: Music Tracks and Audio Features
-- Evidence: Column names such as `track_name`, `artist_name`, `album_name`, `genre`, `stream_count`, and `popularity` are strongly indicative of a music-related dataset.
+- Domain: Passenger Manifest
+- Evidence: Column names such as 'Survived', 'Pclass', 'Sex', 'Age', 'Fare', 'Cabin', and 'Embarked' are indicative of passenger data.
 
 ### COLUMN ROLE ASSIGNMENT
-- Identifier Columns: `track_id`
-- Candidate Target Columns (if any): `popularity`, `stream_count`
-- Descriptive Metadata Columns: `track_name`, `artist_name`, `album_name`
-- Categorical Columns: `genre`, `country`, `label`, `explicit`, `key`, `mode`
-- Numerical Measurement Columns: `danceability`, `duration_ms`, `energy`, `instrumentalness`, `loudness`, `tempo`
-- Temporal Columns: `release_date`
+- Identifier Columns: None identified in the profile.
+- Candidate Target Columns (if any): `Survived` is a candidate target column as it is a binary integer (0 or 1) representing a distinct outcome, and is the focus of the user query.
+- Descriptive Metadata Columns: Not evident from profile.
+- Categorical Columns: `Cabin`, `Embarked`, `Sex`, `Title`. `Pclass` is numerical but its low cardinality (3) allows it to be used for grouping.
+- Numerical Measurement Columns: `Age`, `Fare`, `Parch`, `SibSp`.
+- Temporal Columns: None identified in the profile.
 
 ### SUPPORTED ANALYSIS CAPABILITIES
-- Capability 1: The dataset supports analysis involving the values of `popularity` and `stream_count` for each `track_name` and `artist_name`. These metrics can be used to order tracks and artists.
-- Capability 2: The numerical metrics for individual tracks, such as `popularity` and `stream_count`, can be grouped by `artist_name`. This allows for the examination of these metrics aggregated at the artist level.
-- Capability 3: The distribution of `popularity` and `stream_count` can be compared across categorical dimensions such as `genre`, `country`, and `label`.
+- Capability 1: The dataset supports counting records based on the binary values (0 and 1) in the `Survived` column. The profile provides the total row count (891) and the count of zero values (549) for `Survived`, from which the count of non-zero values can be determined.
+- Capability 2: The dataset supports analysis involving the distribution of `Survived` states across categories defined by `Pclass`, `Sex`, `Embarked`, and `Title`.
+- Capability 3: The dataset supports the comparison of statistical properties of numerical columns like `Age` and `Fare` when the data is partitioned by the two states of the `Survived` column.
 
 ### DATA QUALITY OBSERVATIONS
-- Observation 1: The `release_date` column is stored as an `object` type rather than a native `datetime` type. The sample rows and fixed text length of 10 suggest a consistent 'YYYY-MM-DD' format.
-- Observation 2: The `stream_count` column exhibits high positive skew (5.5183), as noted in the numeric skew summary. This indicates that a subset of values are substantially higher than the mean.
+- Observation 1: The `Age` column has 177 missing values, which is 19.87% of the total records.
+- Observation 2: The dataset contains 101 duplicate rows, accounting for 11.34% of the data.
 
 ### LIMITATIONS AND UNKNOWN AREAS
-- Limitation 1: The dataset appears to represent a static snapshot. It lacks time-series data (e.g., daily streams) that would be required to analyze the "trending" aspect of a track or artist over a period of time.
-- Limitation 2: The precise definitions and calculation methods for the `popularity` and `stream_count` metrics are not evident from the profile. The scale of `popularity` (0-93) and the nature of `stream_count` (a highly skewed float) are provided, but their semantic meaning is not.
+- Limitation 1: The specific meanings of the column names `SibSp` and `Parch` are not evident from the profile.
+- Limitation 2: The profile does not clarify if the 101 duplicate rows are valid entries or represent a data quality issue.

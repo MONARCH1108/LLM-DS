@@ -151,7 +151,7 @@ if __name__ == "__main__":
     CLEANED_DATASET_PATH = (
         r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS\data_cleaning\execution_agent\cleaned_dataset.csv"
     )
-    USER_QUERY = "top trending artists or tracks"
+    USER_QUERY = "give me survived passengers count from the dataset"
 
     print("\nRunning evaluation pipeline...\n")
 
