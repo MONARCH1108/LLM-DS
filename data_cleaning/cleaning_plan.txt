@@ -1,28 +1,25 @@
-Step 1: Handle Missing Values
-Affected columns: Age, Cabin, Embarked
-Condition: Proceed only if these columns still contain missing values.
-Action:
-    - For 'Age': Impute missing values with a suitable central tendency (e.g., median) or a more sophisticated method like K-nearest neighbors imputation, considering 'Pclass' or 'Title'.
-    - For 'Embarked': Impute missing values with the mode (most frequent value).
-    - For 'Cabin': Due to high missing count and high cardinality, consider creating a new binary feature indicating 'Has_Cabin' (1 for present, 0 for missing) and/or extracting the first letter as a new categorical feature, then dropping the original 'Cabin' column.
-Severity: High
-
-Step 2: Address High Cardinality Categorical Features
-Affected columns: PassengerId, Name, Ticket, Cabin
-Condition: Proceed only if these columns exhibit high cardinality or are not directly suitable for modeling.
-Action:
-    - For 'PassengerId': Drop the column as it is a unique identifier.
-    - For 'Name': Extract meaningful features such as 'Title' (e.g., Mr., Mrs., Master) from the name string, then drop the original 'Name' column.
-    - For 'Ticket': Investigate if a pattern or category can be extracted; otherwise, consider dropping the column due to its high cardinality and potential lack of direct predictive power.
-    - For 'Cabin': If not already handled in Step 1, consolidate into fewer, more meaningful categories (e.g., by deck letter) or convert to an indicator of presence/absence.
+Step 1: Handle missing values
+Affected columns: `track_name`, `album_name`
+Condition: If missing values are present in the specified columns.
+Action: Impute missing values using context-appropriate strategies (e.g., mode, 'Unknown' for names) or remove affected rows if data volume allows and impact is negligible.
 Severity: Medium
 
-Step 3: Handle Outliers and Skewness for Numerical Features
-Affected columns: Age, SibSp, Parch, Fare
-Condition: Proceed if the numerical columns still contain severe outliers or exhibit high skewness.
-Action:
-    - For 'Parch' and 'Fare' (identified as having severe outliers and high skewness): Apply robust data transformation techniques (e.g., logarithmic, square root, Box-Cox) to mitigate skewness and reduce outlier impact, or use capping/winsorization methods.
-    - For 'Age' and 'SibSp': Evaluate the distribution and apply similar transformation or capping methods, especially for 'SibSp' which is also highly skewed, to improve model performance and assumption adherence.
+Step 2: Address outliers
+Affected columns: `popularity`, `stream_count`, `explicit`
+Condition: If outliers are detected in the specified columns.
+Action: Investigate the nature of outliers and apply suitable treatment methods such as capping, transformation, or removal, prioritizing severe outlier columns (`stream_count`, `explicit`).
 Severity: High
 
-Overall cleaning complexity: High
+Step 3: Correct data skewness
+Affected columns: `stream_count`
+Condition: If the column `stream_count` remains highly skewed after outlier treatment.
+Action: Apply appropriate data transformation techniques (e.g., log transformation, square root) to normalize its distribution.
+Severity: Medium
+
+Step 4: Manage high cardinality categorical features
+Affected columns: `track_name`, `artist_name`, `album_name`, `release_date`
+Condition: If high cardinality categorical features require processing for downstream analytical or modeling tasks.
+Action: Evaluate and apply suitable feature engineering or encoding strategies (e.g., target encoding, frequency encoding, or dimensionality reduction for text-like fields).
+Severity: Medium
+
+Overall Cleaning Complexity: High

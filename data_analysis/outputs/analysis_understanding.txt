@@ -1,25 +1,25 @@
 ### DATASET DOMAIN (IF SUPPORTED)
-- Domain: Passenger Survival Analysis
-- Evidence: The presence and combination of columns named `Survived`, `Pclass` (Passenger Class), `Sex`, `Age`, `Fare`, `Cabin`, and `Embarked` strongly suggest a dataset related to passengers on a voyage.
+- Domain: Music Track Analytics
+- Evidence: The dataset contains columns such as `track_name`, `artist_name`, `album_name`, `genre`, `duration_ms`, `popularity`, `stream_count`, and various audio feature metrics (`danceability`, `energy`, `tempo`), which are all standard attributes for describing and analyzing music tracks.
 
 ### COLUMN ROLE ASSIGNMENT
-- Identifier Columns: None detected in the profile.
-- Candidate Target Columns (if any): `Survived` (due to its binary integer format [0, 1] and name).
-- Descriptive Metadata Columns: `Title`, `Cabin`.
-- Categorical Columns: `Sex`, `Embarked`, `Cabin`, `Title`, `Pclass` (can be treated as categorical due to low cardinality of 3).
-- Numerical Measurement Columns: `Age`, `Fare`, `Parch`, `SibSp`, `Pclass`, `Survived`.
-- Temporal Columns: None present.
+- Identifier Columns: `track_id`
+- Candidate Target Columns (if any): `popularity`, `stream_count`
+- Descriptive Metadata Columns: `track_name`, `artist_name`, `album_name` (Note: These are integer-encoded representations).
+- Categorical Columns: `country`, `genre`, `label`, `key`, `mode`
+- Numerical Measurement Columns: `danceability`, `duration_ms`, `energy`, `instrumentalness`, `loudness`, `tempo`
+- Temporal Columns: `release_date` (Note: Stored as `object` type, not a native datetime format).
 
 ### SUPPORTED ANALYSIS CAPABILITIES
-- Capability 1: Supports analysis of survival outcomes by grouping the dataset based on the distinct values in the `Sex` column and the `Pclass` column, individually or jointly.
-- Capability 2: Allows for the calculation of summary statistics (e.g., mean, count) for the `Survived` column within each joint category formed by `Sex` and `Pclass`. The mean of the `Survived` column represents a rate for each group.
-- Capability 3: Enables the comparison of distributions of numerical columns like `Age` and `Fare` across the combined categories of `Sex` and `Pclass` to examine their characteristics relative to the `Survived` outcome.
+- Capability 1: The dataset supports analysis involving the aggregation of numerical measures, such as `popularity` and `stream_count`, when grouped by the `country` column. This directly addresses the user query.
+- Capability 2: The dataset supports the comparison of numerical measures (e.g., `danceability`, `energy`, `duration_ms`, `popularity`) across different categorical dimensions such as `genre`, `label`, `key`, or `mode`.
+- Capability 3: The dataset supports filtering and segmenting the data based on categorical attributes (`country`, `genre`, `label`) or ranges of numerical attributes (`popularity`, `tempo`, `duration_ms`) to examine subsets of tracks.
 
 ### DATA QUALITY OBSERVATIONS
-- Observation 1: The `Age` column has a significant number of missing values (177, or 19.87%), which will exclude these rows from any analysis that requires the `Age` value.
-- Observation 2: The dataset contains a notable percentage of duplicate rows (11.34%), which could skew the results of aggregate calculations if not handled.
-- Observation 3: The `Embarked` column contains a small number of missing values (2), which would affect analyses grouped by this column.
+- Observation 1: The columns `track_name`, `artist_name`, and `album_name` are stored as `int64` data types. This indicates they are integer-encoded identifiers, and their numerical values are not suitable for direct arithmetic calculations (e.g., calculating a mean `artist_name`).
+- Observation 2: The `explicit` column contains a single, constant value (0) for all 85,000 rows, as indicated by its min, max, and mean all being 0. This column provides no variance for analysis.
+- Observation 3: The `release_date` column is stored as an `object` data type rather than a dedicated datetime type. This restricts direct temporal analysis (e.g., trend analysis over time) without a data type conversion step.
 
 ### LIMITATIONS AND UNKNOWN AREAS
-- Limitation 1: The semantic meaning of the numerical columns `Parch` and `SibSp` is not evident from the profile, which limits their direct interpretation.
-- Limitation 2: The `Fare`, `Parch`, and `SibSp` columns exhibit positive skew, indicating that their distributions are not symmetric. This is a structural characteristic of the data.
+- Limitation 1: The original text values for `track_name`, `artist_name`, and `album_name` are not present. Analysis is limited to treating them as opaque categorical identifiers.
+- Limitation 2: The unit and scale of the `stream_count` column are not evident from the profile. The values are floating-point numbers, which may indicate they are normalized, log-transformed, or scaled rather than representing raw stream counts.

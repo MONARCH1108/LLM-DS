@@ -151,7 +151,7 @@ if __name__ == "__main__":
     CLEANED_DATASET_PATH = (
         r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS\data_cleaning\execution_agent\cleaned_dataset.csv"
     )
-    USER_QUERY = "How does survival rate vary jointly by sex and passenger class?"
+    USER_QUERY = "For each country, what is the average popularity and total streamcount of tracks released there?"
 
     print("\nRunning evaluation pipeline...\n")
 
