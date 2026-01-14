@@ -1,0 +1,47 @@
+ANALYSIS PLAN
+=============
+
+PLAN OBJECTIVE
+--------------
+To analyze the distribution of track popularity and stream counts for each genre, and to identify the top 5 artists based on an aggregated popularity measure within each genre.
+
+PLAN ASSUMPTIONS
+----------------
+- Assumption 1: The `genre` column provides a correct and consistent categorization for each track.
+- Assumption 2: The `popularity` column is a suitable and comparable metric for determining artist popularity when aggregated from the track level.
+- Assumption 3: Each record in the dataset represents a unique track, as identified by `track_id`.
+
+PLAN STEPS
+----------
+Step 1:
+- Description: Partition the dataset by the `genre` column to prepare for analyzing the distributions of numerical metrics within each category.
+- Input Columns: `genre`, `popularity`, `stream_count`, `track_id`
+- Operation Type: Grouping
+- Expected Output: A dataset of all tracks, segmented by `genre`, retaining the `popularity` and `stream_count` values for each track within its respective group.
+
+Step 2:
+- Description: For each `genre`, further group the data by `artist_name` and apply an aggregation operation to the `popularity` values to produce a single representative popularity metric for each artist within that genre.
+- Input Columns: `genre`, `artist_name`, `popularity`
+- Operation Type: Grouping and Aggregation
+- Expected Output: A dataset where each row contains a unique `genre` and `artist_name` pair, along with its corresponding aggregated popularity value.
+- Execution Consideration: The `artist_name` column has high cardinality, which may have performance implications for this grouping operation.
+
+Step 3:
+- Description: For each `genre` group, rank the artists based on the aggregated popularity metric generated in the previous step. The ranking should be in descending order.
+- Input Columns: `genre`, `artist_name`, aggregated popularity value (from Step 2)
+- Operation Type: Ranking
+- Expected Output: The dataset from Step 2 with an additional column indicating the rank of each artist within their `genre` based on the aggregated popularity metric.
+
+Step 4:
+- Description: Filter the ranked artists within each `genre` to retain only the records corresponding to the top 5 ranks.
+- Input Columns: `genre`, `artist_name`, aggregated popularity value, rank (from Step 3)
+- Operation Type: Filtering
+- Expected Output: A final dataset containing the top 5 ranked artists for each `genre`, including their `artist_name`, `genre`, and aggregated popularity value.
+
+PLAN CONSTRAINTS
+----------------
+- Constraint 1: The calculation method and time frame for the `popularity` and `stream_count` metrics are not defined. The analysis proceeds on the basis that these values are directly comparable across all tracks.
+- Constraint 2: The `stream_count` column is noted as being highly right-skewed. This characteristic of the data distribution is an important context for any interpretation of aggregations involving this column.
+- Constraint 3: The `release_date` column is stored as an `object` data type and would require conversion for any time-based analysis, though it is not used in this plan.
+
+END OF ANALYSIS PLAN
