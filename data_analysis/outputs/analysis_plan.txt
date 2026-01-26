@@ -3,34 +3,26 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- To identify the popularity value of the most popular track for each artist, considering only tracks released in the year 2022.
+- To produce a summarized dataset representing aggregated metrics for each artist, segmented by country. This objective is based on the supported analysis capability of aggregating numerical metrics like `popularity` and `stream_count` for each `artist_name`, further grouped by `country`.
 
 PLAN ASSUMPTIONS
 ----------------
-- Assumption 1: The `release_year` column accurately represents the calendar year of a track's release and can be used for filtering.
-- Assumption 2: The `popularity` column is a numerical measure where a higher value corresponds to greater popularity, allowing for the identification of a maximum value per group.
-- Assumption 3: Each record in the dataset represents a unique track, as indicated by the `track_id` column.
-- Assumption 4: The `artist_name` column correctly identifies the artist associated with each track.
+- Assumption 1: The input dataset is a single, tabular entity containing all required columns as described in the dataset profile.
+- Assumption 2: The columns `country` and `artist_name` are suitable for defining unique segments for analysis, as identified in the analysis understanding.
+- Assumption 3: The columns `popularity` and `stream_count` are numerical measures suitable for aggregation operations.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Filter the dataset to include only records corresponding to tracks released in the year 2022.
-- Input Columns: `release_year`, and all other columns.
-- Operation Type: Filtering
-- Expected Output: A tabular dataset with the same schema as the original, containing only the rows where the `release_year` value is 2022.
-
-Step 2:
-- Description: Group the filtered records by `artist_name` and apply an aggregation operation to the `popularity` column to isolate the single highest value for each artist.
-- Input Columns: `artist_name`, `popularity`.
+- Description: Group records by the unique combinations of `country` and `artist_name`. For each resulting group, apply an aggregation operation to the `popularity` and `stream_count` columns to produce a summarized representation.
+- Input Columns: `country`, `artist_name`, `popularity`, `stream_count`
 - Operation Type: Grouping and Aggregation
-- Expected Output: A materialized tabular dataset with columns for `artist_name` and the corresponding aggregated `popularity` value.
-- Execution Consideration: The `artist_name` column has high cardinality (62391), which may have performance implications for the grouping operation.
+- Expected Output: A materialized tabular dataset where each row corresponds to a unique `country` and `artist_name` pair. The dataset will include the grouping columns (`country`, `artist_name`) and new columns containing the aggregated values derived from `popularity` and `stream_count`.
+- Execution Consideration: The `artist_name` column has high cardinality (62,351 unique values), which may have implications for computational resource usage.
 
 PLAN CONSTRAINTS
 ----------------
-- Constraint 1: This plan is strictly limited to data where `release_year` is 2022. It does not provide insights into artist popularity across other years.
-- Constraint 2: The definition and calculation method for the `popularity` metric are not provided in the dataset profile. The interpretation of the output is therefore limited to the relative values within this dataset.
-- Constraint 3: The dataset profile indicates that the maximum `release_year` is 2025. This plan proceeds by filtering for 2022 and does not address records with future dates.
+- Constraint 1: This plan does not specify the statistical measures (e.g., mean, sum) for the aggregation operation. The choice of measure is external to this plan.
+- Constraint 2: The analysis is based on the data as provided. The `release_date` column is of type `object` and is not used in this plan; any time-based analysis would require a data type conversion prior to use, as noted in the analysis understanding.
 
 END OF ANALYSIS PLAN

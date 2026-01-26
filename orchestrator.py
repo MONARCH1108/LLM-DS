@@ -21,9 +21,23 @@ from data_cleaning.execution_agent.agent import run_execution_agent
 from data_analysis.evaluation_pipeline import run_evaluation_pipeline
 
 # ----------------------------
-# Analysis execution agent import (ADD-ON)
+# Analysis execution agent import
 # ----------------------------
 from data_analysis.execution_agent.agent import run_analysis_execution_agent
+
+
+# ============================================================
+# SESSION STATE (ADD-ON)
+# ============================================================
+
+class SessionState:
+    """
+    Maintains state across multiple user queries in one session.
+    """
+    def __init__(self):
+        self.dataset_path: str | None = None
+        self.cleaned_dataset_path: str | None = None
+        self.is_cleaned: bool = False
 
 
 # ============================================================
@@ -96,17 +110,13 @@ def cleaning_pipeline_tool(dataset_path: str) -> str:
 
 
 # ============================================================
-# EVALUATION ORCHESTRATION (NO TOOL, NO LLM)
+# EVALUATION ORCHESTRATION
 # ============================================================
 
 def run_evaluation_after_cleaning(
     cleaned_dataset_path: str,
     user_query: str,
 ) -> Dict[str, str]:
-    """
-    Runs evaluation pipeline on cleaned dataset.
-    NO execution. NO interpretation.
-    """
 
     print("\n--- Running Evaluation Pipeline ---\n")
 
@@ -123,27 +133,25 @@ def run_evaluation_after_cleaning(
 
 
 # ============================================================
-# ANALYSIS EXECUTION ORCHESTRATION (ADD-ON)
+# ANALYSIS EXECUTION ORCHESTRATION
 # ============================================================
 
 def run_analysis_execution_after_evaluation(
     cleaned_dataset_path: str,
     analysis_plan_path: str,
 ) -> pd.DataFrame:
-    """
-    Runs the analysis execution agent AFTER evaluation.
-    """
 
     print("\n--- Running Analysis Execution Agent ---\n")
 
     OUTPUT_PATH = (
-        r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS\data_analysis\execution_agent\outputs\analysis_result.csv"
+        r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS"
+        r"\data_analysis\execution_agent\outputs\analysis_result.csv"
     )
 
     final_df = run_analysis_execution_agent(
         cleaned_dataset_path=cleaned_dataset_path,
         analysis_plan_path=analysis_plan_path,
-        output_path=OUTPUT_PATH,   # ✅ FIX
+        output_path=OUTPUT_PATH,
     )
 
     print("\nAnalysis execution completed successfully.")
@@ -153,147 +161,129 @@ def run_analysis_execution_after_evaluation(
     return final_df
 
 
-
 # ============================================================
-# MAIN ORCHESTRATOR (LINEAR, DEFAULT)
+# MAIN ORCHESTRATOR (SESSION-BASED)
 # ============================================================
 
 def Agent():
     """
-    Central orchestrator (CURRENT STAGE):
+    Interactive session-based orchestrator.
 
-    User Input
-      → Cleaning (plan + execution)
-      → Evaluation pipeline (profile → understanding → plan)
-      → Analysis execution agent
-      → STOP
+    - Cleans dataset ONCE
+    - Accepts multiple user queries
+    - Reuses cleaned dataset
     """
+
+    session = SessionState()
 
     # 1) Greet user
     greeting = greet_tool.run({})
     print("AI:", greeting)
 
-    # 2) User inputs
-    dataset_path = input("Give path to your dataset: ").strip()
-    user_query = input("Please provide your query: ").strip()
+    # 2) Dataset input (ONCE)
+    session.dataset_path = input("Give path to your dataset: ").strip()
 
-    # 3) Dataset validation
+    # 3) Validate dataset
     ack = receive_data_and_query.run({
-        "path": dataset_path,
-        "query": user_query
+        "path": session.dataset_path,
+        "query": "initial"
     })
     print("AI:", ack)
 
-    # 4) Ingest validation
     ingest_ack = ingest_tool.run({
-        "path": dataset_path,
-        "query": user_query
+        "path": session.dataset_path,
+        "query": "initial"
     })
     print("AI (ingest):", ingest_ack)
 
-    # 5) Cleaning pipeline
+    # 4) CLEAN DATASET ONCE
+    print("\n🧹 Cleaning dataset (one-time)...\n")
+
     cleaning_ack = cleaning_pipeline_tool.run({
-        "dataset_path": dataset_path
+        "dataset_path": session.dataset_path
     })
     print("AI (cleaning):", cleaning_ack)
 
-    CLEANED_DATASET_PATH = (
-        r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS\data_cleaning\execution_agent\cleaned_dataset.csv"
+    session.cleaned_dataset_path = (
+        r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS"
+        r"\data_cleaning\execution_agent\cleaned_dataset.csv"
     )
+    session.is_cleaned = True
 
-    # 6) Evaluation pipeline
-    evaluation_result = run_evaluation_after_cleaning(
-        cleaned_dataset_path=CLEANED_DATASET_PATH,
-        user_query=user_query,
-    )
+    # --------------------------------------------------
+    # 🔁 QUERY LOOP (NO MORE CLEANING)
+    # --------------------------------------------------
+    while True:
+        print("\n--------------------------------------")
+        user_query = input("Ask a new question (or type 'exit'): ").strip()
 
-    # 7) Analysis execution agent
-    analysis_df = run_analysis_execution_after_evaluation(
-        cleaned_dataset_path=CLEANED_DATASET_PATH,
-        analysis_plan_path=evaluation_result["analysis_plan"],
-    )
+        if user_query.lower() in {"exit", "quit"}:
+            print("👋 Session ended.")
+            break
 
-    return {
-        "greeting": greeting,
-        "ack": ack,
-        "ingest_ack": ingest_ack,
-        "cleaning_ack": cleaning_ack,
-        "evaluation_result": evaluation_result,
-        "analysis_df_shape": analysis_df.shape,
-    }
+        # Evaluation
+        evaluation_result = run_evaluation_after_cleaning(
+            cleaned_dataset_path=session.cleaned_dataset_path,
+            user_query=user_query,
+        )
+
+        # Execution
+        analysis_df = run_analysis_execution_after_evaluation(
+            cleaned_dataset_path=session.cleaned_dataset_path,
+            analysis_plan_path=evaluation_result["analysis_plan"],
+        )
+
+        print("\n✅ Query completed.")
+        print(f"Result shape: {analysis_df.shape}")
 
 
 # ============================================================
-# OPTIONAL: LANGGRAPH VERSION (ADD-ON EXTENDED)
+# OPTIONAL: LANGGRAPH VERSION (UNCHANGED)
 # ============================================================
 
 def build_graph():
-    """
-    Optional LangGraph-based orchestrator.
-    Mirrors:
-      greet → ingest → cleaning → evaluation → analysis_execution → END
-    """
-
     g = StateGraph(dict, input_schema=dict, output_schema=dict)
 
     def greet_node(state: dict) -> dict:
         reply = greet_tool.run({})
         state.setdefault("messages", []).append(AIMessage(content=reply))
-        state["last_action"] = "greet"
-        state["last_response"] = reply
         return state
 
     def ingest_node(state: dict) -> dict:
-        path = state.get("dataset_path", "")
-        query = state.get("user_query", "")
         resp = receive_data_and_query.run({
-            "path": path,
-            "query": query
+            "path": state.get("dataset_path", ""),
+            "query": state.get("user_query", "")
         })
         state.setdefault("messages", []).append(AIMessage(content=resp))
-        state["last_action"] = "ingest"
-        state["last_response"] = resp
         return state
 
     def cleaning_node(state: dict) -> dict:
-        path = state.get("dataset_path", "")
         resp = cleaning_pipeline_tool.run({
-            "dataset_path": path
+            "dataset_path": state.get("dataset_path", "")
         })
         state.setdefault("messages", []).append(AIMessage(content=resp))
-        state["last_action"] = "cleaning"
-        state["last_response"] = resp
         return state
 
     def evaluation_node(state: dict) -> dict:
-        cleaned_path = (
-            r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS\data_cleaning\execution_agent\cleaned_dataset.csv"
-        )
-        query = state.get("user_query", "")
-
         result = run_evaluation_after_cleaning(
-            cleaned_dataset_path=cleaned_path,
-            user_query=query,
+            cleaned_dataset_path=(
+                r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS"
+                r"\data_cleaning\execution_agent\cleaned_dataset.csv"
+            ),
+            user_query=state.get("user_query", ""),
         )
-
         state["evaluation_result"] = result
-        state["last_action"] = "evaluation"
         return state
 
     def analysis_execution_node(state: dict) -> dict:
-        cleaned_path = (
-            r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS\data_cleaning\execution_agent\cleaned_dataset.csv"
-        )
-
-        plan_path = state["evaluation_result"]["analysis_plan"]
-
         df = run_analysis_execution_after_evaluation(
-            cleaned_dataset_path=cleaned_path,
-            analysis_plan_path=plan_path,
+            cleaned_dataset_path=(
+                r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS"
+                r"\data_cleaning\execution_agent\cleaned_dataset.csv"
+            ),
+            analysis_plan_path=state["evaluation_result"]["analysis_plan"],
         )
-
         state["analysis_df_shape"] = df.shape
-        state["last_action"] = "analysis_execution"
         return state
 
     g.add_node("greet", greet_node)
