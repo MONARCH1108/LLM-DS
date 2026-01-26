@@ -6,11 +6,17 @@ import pandas as pd
 # ----------------------------------------------------------------------
 # IMPORT PIPELINE COMPONENTS
 # ----------------------------------------------------------------------
-
+"""
 from dataset_profile import dataset_profile
 from profile_to_text import profile_to_text
 from analysis_thinker import run_analysis_thinker
 from analysis_plan_generator import run_analysis_plan_generator
+"""
+
+from data_analysis.dataset_profile import dataset_profile
+from data_analysis.profile_to_text import profile_to_text
+from data_analysis.analysis_thinker import run_analysis_thinker
+from data_analysis.analysis_plan_generator import run_analysis_plan_generator
 
 
 # ----------------------------------------------------------------------

@@ -1,11 +1,17 @@
 from pathlib import Path
 import pandas as pd
 
+"""
 from code_writer import generate_code_for_step
 from executor_tool import execute_analysis_code
 from metrics import evaluate_step
 from state import ExecutionState
+"""
 
+from data_analysis.execution_agent.code_writer import generate_code_for_step
+from data_analysis.execution_agent.executor_tool import execute_analysis_code
+from data_analysis.execution_agent.metrics import evaluate_step
+from data_analysis.execution_agent.state import ExecutionState
 
 MAX_RETRIES = 5
 DEBUG_LLM_CODE = True

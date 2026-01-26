@@ -3,26 +3,34 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- Objective: To produce a summarized representation of `popularity` and `stream_count` for each distinct `country` present in the dataset.
+- To identify the popularity value of the most popular track for each artist, considering only tracks released in the year 2022.
 
 PLAN ASSUMPTIONS
 ----------------
-- Assumption 1: The `country` column contains valid and meaningful categories suitable for grouping the data.
-- Assumption 2: The `popularity` and `stream_count` columns contain numerical data that is appropriate for aggregation.
-- Assumption 3: Each row in the dataset represents a distinct entity (e.g., a track), as suggested by the `track_id` column's cardinality matching the total number of rows.
+- Assumption 1: The `release_year` column accurately represents the calendar year of a track's release and can be used for filtering.
+- Assumption 2: The `popularity` column is a numerical measure where a higher value corresponds to greater popularity, allowing for the identification of a maximum value per group.
+- Assumption 3: Each record in the dataset represents a unique track, as indicated by the `track_id` column.
+- Assumption 4: The `artist_name` column correctly identifies the artist associated with each track.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Group the dataset by the `country` column and apply an aggregation operation to the `popularity` and `stream_count` columns for each country.
-- Input Columns: `country`, `popularity`, `stream_count`
+- Description: Filter the dataset to include only records corresponding to tracks released in the year 2022.
+- Input Columns: `release_year`, and all other columns.
+- Operation Type: Filtering
+- Expected Output: A tabular dataset with the same schema as the original, containing only the rows where the `release_year` value is 2022.
+
+Step 2:
+- Description: Group the filtered records by `artist_name` and apply an aggregation operation to the `popularity` column to isolate the single highest value for each artist.
+- Input Columns: `artist_name`, `popularity`.
 - Operation Type: Grouping and Aggregation
-- Expected Output: A materialized tabular dataset where each row represents a unique `country`. The dataset will contain the `country` column and new columns with the aggregated values for `popularity` and `stream_count`.
+- Expected Output: A materialized tabular dataset with columns for `artist_name` and the corresponding aggregated `popularity` value.
+- Execution Consideration: The `artist_name` column has high cardinality (62391), which may have performance implications for the grouping operation.
 
 PLAN CONSTRAINTS
 ----------------
-- Constraint 1: The specific statistical measures for aggregation (e.g., mean, sum) are not defined and must be determined during execution.
-- Constraint 2: The unit and scale of the `stream_count` column are not evident from the provided inputs, which may limit the interpretation of its aggregated values.
-- Constraint 3: The analysis is strictly limited to the data provided in the dataset profile and does not incorporate any external information.
+- Constraint 1: This plan is strictly limited to data where `release_year` is 2022. It does not provide insights into artist popularity across other years.
+- Constraint 2: The definition and calculation method for the `popularity` metric are not provided in the dataset profile. The interpretation of the output is therefore limited to the relative values within this dataset.
+- Constraint 3: The dataset profile indicates that the maximum `release_year` is 2025. This plan proceeds by filtering for 2022 and does not address records with future dates.
 
 END OF ANALYSIS PLAN
