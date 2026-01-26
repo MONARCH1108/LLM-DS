@@ -3,26 +3,25 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- To produce a summarized dataset representing aggregated metrics for each artist, segmented by country. This objective is based on the supported analysis capability of aggregating numerical metrics like `popularity` and `stream_count` for each `artist_name`, further grouped by `country`.
+- To analyze the distribution of the `Age` column for each unique combination of `Sex` and `Survived` status.
 
 PLAN ASSUMPTIONS
 ----------------
-- Assumption 1: The input dataset is a single, tabular entity containing all required columns as described in the dataset profile.
-- Assumption 2: The columns `country` and `artist_name` are suitable for defining unique segments for analysis, as identified in the analysis understanding.
-- Assumption 3: The columns `popularity` and `stream_count` are numerical measures suitable for aggregation operations.
+- The columns `Age`, `Sex`, and `Survived` are the correct inputs for this analysis, as identified in the analysis understanding.
+- The unique combinations of values in the `Sex` and `Survived` columns define the segments for analysis.
+- An aggregation operation applied to the `Age` column within each segment is sufficient to represent its distribution for the purpose of this query.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Group records by the unique combinations of `country` and `artist_name`. For each resulting group, apply an aggregation operation to the `popularity` and `stream_count` columns to produce a summarized representation.
-- Input Columns: `country`, `artist_name`, `popularity`, `stream_count`
+- Description: Group the records by the unique combinations of values in the `Sex` and `Survived` columns. For each resulting group, apply an aggregation operation to the `Age` column.
+- Input Columns: `Age`, `Sex`, `Survived`
 - Operation Type: Grouping and Aggregation
-- Expected Output: A materialized tabular dataset where each row corresponds to a unique `country` and `artist_name` pair. The dataset will include the grouping columns (`country`, `artist_name`) and new columns containing the aggregated values derived from `popularity` and `stream_count`.
-- Execution Consideration: The `artist_name` column has high cardinality (62,351 unique values), which may have implications for computational resource usage.
+- Expected Output: A materialized tabular dataset where each row corresponds to a unique combination of `Sex` and `Survived`. The dataset will include columns for `Sex`, `Survived`, and one or more new columns representing the summarized `Age` for that group.
 
 PLAN CONSTRAINTS
 ----------------
-- Constraint 1: This plan does not specify the statistical measures (e.g., mean, sum) for the aggregation operation. The choice of measure is external to this plan.
-- Constraint 2: The analysis is based on the data as provided. The `release_date` column is of type `object` and is not used in this plan; any time-based analysis would require a data type conversion prior to use, as noted in the analysis understanding.
+- This plan describes only the structural operations; it does not specify the statistical measures (e.g., mean, median) to be used for the aggregation of `Age`.
+- The analysis is descriptive and any observed relationships between `Age`, `Sex`, and `Survived` should not be interpreted as causal.
 
 END OF ANALYSIS PLAN
