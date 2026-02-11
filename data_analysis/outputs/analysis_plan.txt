@@ -3,25 +3,38 @@ ANALYSIS PLAN
 
 PLAN OBJECTIVE
 --------------
-- To analyze the distribution of the `Age` column for each unique combination of `Sex` and `Survived` status.
+- Objective: To compare the stream counts for tracks categorized as 'older' versus 'newer' within each distinct music genre.
 
 PLAN ASSUMPTIONS
 ----------------
-- The columns `Age`, `Sex`, and `Survived` are the correct inputs for this analysis, as identified in the analysis understanding.
-- The unique combinations of values in the `Sex` and `Survived` columns define the segments for analysis.
-- An aggregation operation applied to the `Age` column within each segment is sufficient to represent its distribution for the purpose of this query.
+- Assumption 1: The `release_date` column, despite being an object type, contains consistently formatted date strings that can be parsed to derive a temporal unit such as the year of release.
+- Assumption 2: A meaningful criterion for segmenting tracks into 'older' and 'newer' categories can be established for the analysis.
+- Assumption 3: The `stream_count` column is a suitable metric for comparison across tracks with different release dates, acknowledging that older tracks have had more time to accumulate streams.
 
 PLAN STEPS
 ----------
 Step 1:
-- Description: Group the records by the unique combinations of values in the `Sex` and `Survived` columns. For each resulting group, apply an aggregation operation to the `Age` column.
-- Input Columns: `Age`, `Sex`, `Survived`
+- Description: Derive a temporal unit from the `release_date` column to enable time-based segmentation.
+- Input Columns: `release_date`
+- Operation Type: Transformation
+- Expected Output: A dataset identical to the input but with an additional column representing the release year for each track.
+
+Step 2:
+- Description: Segment the dataset by categorizing each track as 'older' or 'newer' based on the derived release year column. The specific criteria for this segmentation are not provided.
+- Input Columns: The release year column from Step 1.
+- Operation Type: Segmentation
+- Expected Output: A dataset identical to the output of Step 1 but with an additional column that assigns each track to an 'age_category' (e.g., 'older', 'newer').
+
+Step 3:
+- Description: Group records by `genre` and the `age_category` from Step 2, and produce an aggregated representation of `stream_count` for each resulting group.
+- Input Columns: `genre`, `age_category`, `stream_count`
 - Operation Type: Grouping and Aggregation
-- Expected Output: A materialized tabular dataset where each row corresponds to a unique combination of `Sex` and `Survived`. The dataset will include columns for `Sex`, `Survived`, and one or more new columns representing the summarized `Age` for that group.
+- Expected Output: A materialized dataset with columns for `genre`, `age_category`, and a column containing the aggregated value of `stream_count` for each group.
 
 PLAN CONSTRAINTS
 ----------------
-- This plan describes only the structural operations; it does not specify the statistical measures (e.g., mean, median) to be used for the aggregation of `Age`.
-- The analysis is descriptive and any observed relationships between `Age`, `Sex`, and `Survived` should not be interpreted as causal.
+- Constraint 1: The specific threshold or logic for defining 'older' versus 'newer' tracks is not evident from the provided inputs and must be defined prior to execution.
+- Constraint 2: The analysis does not account for the inherent time advantage that older tracks have in accumulating `stream_count` values. The `stream_count` is treated as a point-in-time cumulative metric.
+- Constraint 3: The specific aggregation function to be applied to `stream_count` in Step 3 is not specified.
 
 END OF ANALYSIS PLAN

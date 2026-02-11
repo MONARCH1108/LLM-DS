@@ -1,25 +1,25 @@
 Step 1: Handle Missing Values
-Affected columns: Age, Cabin, Embarked
-Condition: Skip if columns are to be dropped entirely or if missingness itself is a feature to be encoded.
-Action: Impute missing values using appropriate strategies (e.g., median/mean for 'Age', mode for 'Embarked', 'Unknown' or feature engineering for 'Cabin').
+Affected columns: `track_name`, `album_name`
+Condition: Skip if these columns are not essential for downstream analysis or if the percentage of missing values is extremely low and dropping rows is acceptable.
+Action: Impute missing values for `track_name` and `album_name` with a placeholder string (e.g., 'Unknown Track', 'Unknown Album').
+Severity: Medium
+
+Step 2: Address Outliers
+Affected columns: `popularity`, `stream_count`, `explicit`
+Condition: Skip if the outliers are confirmed to be valid data points representing true rare events that should be preserved for specific analytical goals.
+Action: For `stream_count` and `popularity`, investigate distribution and cap/floor values or apply robust scaling. For `explicit`, ensure values are strictly binary (0 or 1); recode invalid values to mode or null.
 Severity: High
 
-Step 2: Address Outliers in Numerical Features
-Affected columns: Age, SibSp, Parch, Fare
-Condition: Skip if outliers represent valid data points critical for analysis or if robust models are chosen that are insensitive to outliers.
-Action: Identify and treat outliers using methods like capping, transformation (e.g., log transformation if also addressing skewness), or removal of extreme observations if confirmed as errors.
-Severity: High (Parch, Fare), Medium (Age, SibSp)
-
-Step 3: Manage High Cardinality Categorical Features
-Affected columns: Name, Ticket, Cabin
-Condition: Skip if these features are not required for downstream analysis/modeling or if a simplified representation (e.g., dropping) is acceptable.
-Action: Apply feature engineering (e.g., extract titles from 'Name', categorize 'Ticket' patterns, extract deck from 'Cabin') or suitable encoding techniques (e.g., target encoding, frequency encoding, or grouping rare categories).
+Step 3: Handle Skewed Distributions
+Affected columns: `stream_count`
+Condition: Skip if downstream models or analyses are not sensitive to feature distribution (e.g., tree-based models) or if the business context dictates preserving the original scale.
+Action: Apply appropriate mathematical transformations (e.g., log, square root, Box-Cox) to normalize the `stream_count` distribution.
 Severity: Medium
 
-Step 4: Address Data Skewness
-Affected columns: SibSp, Parch, Fare
-Condition: Skip if downstream models are robust to skewed data distributions (e.g., tree-based models) or if domain knowledge advises against transformation.
-Action: Apply appropriate mathematical transformations (e.g., log transformation, square root transformation) to reduce skewness and normalize feature distributions.
-Severity: Medium
+Step 4: Address High Cardinality Categorical Features
+Affected columns: `track_id`, `track_name`, `artist_name`, `album_name`, `release_date`
+Condition: Skip if these columns are used solely as identifiers and not as features for modeling, or if the chosen modeling technique can handle high cardinality directly.
+Action: For `track_id`, verify its role as a unique identifier. For `track_name`, `artist_name`, `album_name`, and `release_date`, consider grouping rare categories, using frequency encoding, or other advanced encoding techniques suitable for high cardinality when used as features.
+Severity: High
 
-Overall cleaning complexity: High.
+Overall cleaning complexity: high

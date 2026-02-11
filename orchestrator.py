@@ -167,23 +167,22 @@ def run_analysis_execution_after_evaluation(
 
 def Agent():
     """
-    Interactive session-based orchestrator.
-
-    - Cleans dataset ONCE
-    - Accepts multiple user queries
-    - Reuses cleaned dataset
+    Single-run orchestrator.
+    - Cleans dataset once
+    - Runs evaluation once
+    - Runs execution once
     """
 
     session = SessionState()
 
-    # 1) Greet user
+    # 1️⃣ Greet
     greeting = greet_tool.run({})
     print("AI:", greeting)
 
-    # 2) Dataset input (ONCE)
+    # 2️⃣ Dataset input
     session.dataset_path = input("Give path to your dataset: ").strip()
 
-    # 3) Validate dataset
+    # 3️⃣ Validate dataset
     ack = receive_data_and_query.run({
         "path": session.dataset_path,
         "query": "initial"
@@ -196,8 +195,8 @@ def Agent():
     })
     print("AI (ingest):", ingest_ack)
 
-    # 4) CLEAN DATASET ONCE
-    print("\n🧹 Cleaning dataset (one-time)...\n")
+    # 4️⃣ CLEAN DATASET (ONCE)
+    print("\n🧹 Cleaning dataset...\n")
 
     cleaning_ack = cleaning_pipeline_tool.run({
         "dataset_path": session.dataset_path
@@ -208,33 +207,25 @@ def Agent():
         r"C:\Users\abhay\OneDrive\Desktop\LLM-DS\LLM-DS"
         r"\data_cleaning\execution_agent\cleaned_dataset.csv"
     )
-    session.is_cleaned = True
 
-    # --------------------------------------------------
-    # 🔁 QUERY LOOP (NO MORE CLEANING)
-    # --------------------------------------------------
-    while True:
-        print("\n--------------------------------------")
-        user_query = input("Ask a new question (or type 'exit'): ").strip()
+    # 5️⃣ SINGLE QUERY
+    print("\n--------------------------------------")
+    user_query = input("Ask your question: ").strip()
 
-        if user_query.lower() in {"exit", "quit"}:
-            print("👋 Session ended.")
-            break
+    # Evaluation
+    evaluation_result = run_evaluation_after_cleaning(
+        cleaned_dataset_path=session.cleaned_dataset_path,
+        user_query=user_query,
+    )
 
-        # Evaluation
-        evaluation_result = run_evaluation_after_cleaning(
-            cleaned_dataset_path=session.cleaned_dataset_path,
-            user_query=user_query,
-        )
+    # Execution
+    analysis_df = run_analysis_execution_after_evaluation(
+        cleaned_dataset_path=session.cleaned_dataset_path,
+        analysis_plan_path=evaluation_result["analysis_plan"],
+    )
 
-        # Execution
-        analysis_df = run_analysis_execution_after_evaluation(
-            cleaned_dataset_path=session.cleaned_dataset_path,
-            analysis_plan_path=evaluation_result["analysis_plan"],
-        )
-
-        print("\n✅ Query completed.")
-        print(f"Result shape: {analysis_df.shape}")
+    print("\n✅ Query completed.")
+    print(f"Final result shape: {analysis_df.shape}")
 
 
 # ============================================================

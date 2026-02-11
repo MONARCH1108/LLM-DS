@@ -2,126 +2,171 @@ DATASET PROFILE — FACTUAL DESCRIPTION ONLY
 NO INTERPRETATION. NO CONCLUSIONS. NO SUGGESTIONS.
 
 DATASET OVERVIEW
-- Rows: 891
-- Columns: 12
+- Rows: 84933
+- Columns: 19
 
 COLUMN SCHEMA (NAME : DTYPE)
-- Age: float64
-- Deck: object
-- Embarked: object
-- Fare: float64
-- Parch: float64
-- PassengerId: int64
-- Pclass: int64
-- Sex: object
-- SibSp: float64
-- Survived: int64
-- Ticket_Pattern: object
-- Title: object
+- album_name: object
+- artist_name: object
+- country: object
+- danceability: float64
+- duration_ms: int64
+- energy: float64
+- explicit: int64
+- genre: object
+- instrumentalness: float64
+- key: int64
+- label: object
+- loudness: float64
+- mode: int64
+- popularity: int64
+- release_date: object
+- stream_count: int64
+- tempo: float64
+- track_id: object
+- track_name: object
 
 COLUMN GROUPS
 - boolean: none
-- categorical: Deck, Embarked, Sex, Ticket_Pattern, Title
+- categorical: album_name, artist_name, country, genre, label, release_date, track_id, track_name
 - datetime: none
-- numerical: Age, Fare, Parch, PassengerId, Pclass, SibSp, Survived
+- numerical: danceability, duration_ms, energy, explicit, instrumentalness, key, loudness, mode, popularity, stream_count, tempo
 
 SAMPLE ROWS (FIRST N)
-- Row 1: {'PassengerId': 1, 'Survived': 0, 'Pclass': 3, 'Sex': 'male', 'Age': 22.0, 'SibSp': 1.0, 'Parch': 0.0, 'Fare': 2.692582403567252, 'Embarked': 'S', 'Title': 'Mr', 'Ticket_Pattern': 'A', 'Deck': 'U'}
-- Row 2: {'PassengerId': 2, 'Survived': 1, 'Pclass': 1, 'Sex': 'female', 'Age': 38.0, 'SibSp': 1.0, 'Parch': 0.0, 'Fare': 8.10150603283118, 'Embarked': 'C', 'Title': 'Mrs', 'Ticket_Pattern': 'PC', 'Deck': 'C'}
-- Row 3: {'PassengerId': 3, 'Survived': 1, 'Pclass': 3, 'Sex': 'female', 'Age': 26.0, 'SibSp': 0.0, 'Parch': 0.0, 'Fare': 2.8151376520518494, 'Embarked': 'S', 'Title': 'Miss', 'Ticket_Pattern': 'STON', 'Deck': 'U'}
-- Row 4: {'PassengerId': 4, 'Survived': 1, 'Pclass': 1, 'Sex': 'female', 'Age': 35.0, 'SibSp': 1.0, 'Parch': 0.0, 'Fare': 7.286974680894672, 'Embarked': 'S', 'Title': 'Mrs', 'Ticket_Pattern': nan, 'Deck': 'C'}
-- Row 5: {'PassengerId': 5, 'Survived': 0, 'Pclass': 3, 'Sex': 'male', 'Age': 35.0, 'SibSp': 0.0, 'Parch': 0.0, 'Fare': 2.837252191822221, 'Embarked': 'S', 'Title': 'Mr', 'Ticket_Pattern': nan, 'Deck': 'U'}
+- Row 1: {'track_id': 'TRK-BEBD53DA84E1', 'track_name': 'Agent every (0)', 'artist_name': 'Noah Rhodes', 'album_name': 'Beautiful instead', 'release_date': '2016-04-01', 'genre': 'Pop', 'duration_ms': 234194, 'popularity': 55, 'danceability': 0.15, 'energy': 0.74, 'key': 9, 'loudness': -32.22, 'mode': 0, 'instrumentalness': 0.436, 'tempo': 73.12, 'stream_count': 13000, 'country': 'Brazil', 'explicit': 0, 'label': 'Universal Music'}
+- Row 2: {'track_id': 'TRK-6A32496762D7', 'track_name': 'Night respond', 'artist_name': 'Jennifer Cole', 'album_name': 'Table', 'release_date': '2022-04-15', 'genre': 'Metal', 'duration_ms': 375706, 'popularity': 45, 'danceability': 0.44, 'energy': 0.46, 'key': 0, 'loudness': -14.02, 'mode': 0, 'instrumentalness': 0.223, 'tempo': 157.74, 'stream_count': 1000, 'country': 'France', 'explicit': 1, 'label': 'Island Records'}
+- Row 3: {'track_id': 'TRK-47AA7523463E', 'track_name': 'Future choice whatever', 'artist_name': 'Brandon Davis', 'album_name': 'Page southern', 'release_date': '2016-02-23', 'genre': 'Rock', 'duration_ms': 289191, 'popularity': 55, 'danceability': 0.62, 'energy': 0.8, 'key': 8, 'loudness': -48.26, 'mode': 1, 'instrumentalness': 0.584, 'tempo': 71.03, 'stream_count': 1000, 'country': 'Germany', 'explicit': 1, 'label': 'XL Recordings'}
+- Row 4: {'track_id': 'TRK-25ADA22E3B06', 'track_name': 'Bad fall pick those', 'artist_name': 'Corey Jones', 'album_name': 'Spring', 'release_date': '2015-10-12', 'genre': 'Pop', 'duration_ms': 209484, 'popularity': 51, 'danceability': 0.78, 'energy': 0.98, 'key': 1, 'loudness': -34.47, 'mode': 1, 'instrumentalness': 0.684, 'tempo': 149.0, 'stream_count': 1000, 'country': 'France', 'explicit': 0, 'label': 'Warner Music'}
+- Row 5: {'track_id': 'TRK-9245F2AD996A', 'track_name': 'Husband', 'artist_name': 'Mark Diaz', 'album_name': 'Great prove', 'release_date': '2022-07-08', 'genre': 'Indie', 'duration_ms': 127435, 'popularity': 39, 'danceability': 0.74, 'energy': 0.18, 'key': 10, 'loudness': -17.84, 'mode': 0, 'instrumentalness': 0.304, 'tempo': 155.85, 'stream_count': 2000, 'country': 'United States', 'explicit': 0, 'label': 'Independent'}
 
 NUMERIC STATISTICS (SUMMARY)
 - count:
-  - Age: 891.0
-  - Fare: 891.0
-  - Parch: 891.0
-  - PassengerId: 891.0
-  - Pclass: 891.0
-  - SibSp: 891.0
-  - Survived: 891.0
+  - danceability: 84933.0
+  - duration_ms: 84933.0
+  - energy: 84933.0
+  - explicit: 84933.0
+  - instrumentalness: 84933.0
+  - key: 84933.0
+  - loudness: 84933.0
+  - mode: 84933.0
+  - popularity: 84933.0
+  - stream_count: 84933.0
+  - tempo: 84933.0
 - max:
-  - Age: 54.5
-  - Fare: 8.1015
-  - Parch: 0.0
-  - PassengerId: 891.0
-  - Pclass: 3.0
-  - SibSp: 1.5811
-  - Survived: 1.0
+  - danceability: 0.99
+  - duration_ms: 420000.0
+  - energy: 0.99
+  - explicit: 1.0
+  - instrumentalness: 0.8
+  - key: 11.0
+  - loudness: -1.0
+  - mode: 1.0
+  - popularity: 100.0
+  - stream_count: 20000000.0
+  - tempo: 200.0
 - mean:
-  - Age: 29.0393
-  - Fare: 4.4852
-  - Parch: 0.0
-  - PassengerId: 446.0
-  - Pclass: 2.3086
-  - SibSp: 0.3606
-  - Survived: 0.3838
+  - danceability: 0.5207
+  - duration_ms: 254912.4552
+  - energy: 0.5054
+  - explicit: 0.2013
+  - instrumentalness: 0.3998
+  - key: 5.5155
+  - loudness: -27.9968
+  - mode: 0.5002
+  - popularity: 48.1637
+  - stream_count: 214499.947
+  - tempo: 129.9592
 - min:
-  - Age: 2.5
-  - Fare: 0.0
-  - Parch: 0.0
-  - PassengerId: 1.0
-  - Pclass: 1.0
-  - SibSp: 0.0
-  - Survived: 0.0
+  - danceability: 0.05
+  - duration_ms: 90004.0
+  - energy: 0.02
+  - explicit: 0.0
+  - instrumentalness: 0.0
+  - key: 0.0
+  - loudness: -55.0
+  - mode: 0.0
+  - popularity: 0.0
+  - stream_count: 1000.0
+  - tempo: 60.0
 - std:
-  - Age: 12.0721
-  - Fare: 1.9834
-  - Parch: 0.0
-  - PassengerId: 257.3538
-  - Pclass: 0.8361
-  - SibSp: 0.5448
-  - Survived: 0.4866
+  - danceability: 0.2708
+  - duration_ms: 95301.0569
+  - energy: 0.2798
+  - explicit: 0.401
+  - instrumentalness: 0.2315
+  - key: 3.454
+  - loudness: 15.5998
+  - mode: 0.5
+  - popularity: 14.8307
+  - stream_count: 1681286.4329
+  - tempo: 40.4442
 
 MISSING VALUE SUMMARY
-- Ticket_Pattern: missing_count=661, missing_pct=0.7419
+- No missing values detected
 
 COLUMN CARDINALITY
-- Age: 65
-- Deck: 9
-- Embarked: 3
-- Fare: 204
-- Parch: 1
-- PassengerId: 891
-- Pclass: 3
-- Sex: 2
-- SibSp: 4
-- Survived: 2
-- Ticket_Pattern: 17
-- Title: 17
+- album_name: 43161
+- artist_name: 62351
+- country: 10
+- danceability: 95
+- duration_ms: 75027
+- energy: 98
+- explicit: 2
+- genre: 12
+- instrumentalness: 801
+- key: 12
+- label: 8
+- loudness: 5401
+- mode: 2
+- popularity: 99
+- release_date: 4018
+- stream_count: 2249
+- tempo: 13967
+- track_id: 84933
+- track_name: 68914
 
 POSSIBLE IDENTIFIER COLUMNS
-- PassengerId
+- track_id
 
 LOW INFORMATION COLUMNS
-- Parch
+- None detected
 
 DUPLICATE ROW SUMMARY (STRUCTURAL SIGNAL)
 - Duplicate row count: 0
 - Duplicate row percentage: 0.0
 
 ZERO VALUE SUMMARY (STRUCTURAL SIGNAL)
-- Age: 0
-- Fare: 15
-- Parch: 891
-- PassengerId: 0
-- Pclass: 0
-- SibSp: 608
-- Survived: 549
+- danceability: 0
+- duration_ms: 0
+- energy: 0
+- explicit: 67833
+- instrumentalness: 44
+- key: 6990
+- loudness: 0
+- mode: 42451
+- popularity: 1
+- stream_count: 0
+- tempo: 0
 
 TEXT LENGTH SUMMARY (STRUCTURAL SIGNAL)
-- Deck: min_length=1, max_length=1, avg_length=1.0
-- Embarked: min_length=1, max_length=1, avg_length=1.0
-- Sex: min_length=4, max_length=6, avg_length=4.7048
-- Ticket_Pattern: min_length=1, max_length=5, avg_length=2.0
-- Title: min_length=2, max_length=8, avg_length=2.7699
+- album_name: min_length=1, max_length=26, avg_length=8.877
+- artist_name: min_length=6, max_length=28, avg_length=13.2913
+- country: min_length=5, max_length=14, avg_length=7.679
+- genre: min_length=3, max_length=9, avg_length=5.2533
+- label: min_length=3, max_length=15, avg_length=10.7441
+- release_date: min_length=10, max_length=10, avg_length=10.0
+- track_id: min_length=16, max_length=16, avg_length=16.0
+- track_name: min_length=1, max_length=52, avg_length=15.3699
 
 NUMERIC SKEW (STATISTICAL SIGNAL)
-- Age: 0.1644
-- Fare: 0.582
-- PassengerId: 0.0
-- Pclass: -0.6305
-- SibSp: 0.9925
+- danceability: -0.0013
+- duration_ms: 0.0009
+- energy: 0.001
+- instrumentalness: -0.0
+- key: -0.0051
+- loudness: -0.0011
+- popularity: 0.6659
+- stream_count: 10.5186
+- tempo: -0.0001
 
 END OF DATASET PROFILE
